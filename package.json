@@ -1,0 +1,17 @@
+{
+  "name": "bachelor-party",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "participant": "pnpm --filter participant start",
+    "admin": "pnpm --filter admin start",
+    "build:participant:android": "pnpm --filter participant run build:android",
+    "build:admin:android": "pnpm --filter admin run build:android"
+  },
+  "devDependencies": {
+    "typescript": "~5.3.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
