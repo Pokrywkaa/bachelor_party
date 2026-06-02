@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
-  View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView,
+  View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView, Platform,
 } from 'react-native';
 import {
   collection, query, where, onSnapshot, orderBy,
@@ -25,6 +25,48 @@ export default function HomeScreen({ navigation }: Props) {
     punishments, setPunishments,
     submissions, setSubmissions,
   } = useParticipantStore();
+
+  // ── Web browser notifications for new assignments ────────────────────────
+
+  const seenAssignmentIds = useRef<Set<string>>(new Set());
+  const notificationsInitialized = useRef(false);
+
+  useEffect(() => {
+    if (Platform.OS !== 'web') return;
+    if (typeof Notification === 'undefined') return;
+
+    if (!notificationsInitialized.current) {
+      // First snapshot: mark all existing assignments as seen without notifying
+      assignments.forEach((a) => seenAssignmentIds.current.add(a.id));
+      notificationsInitialized.current = true;
+      return;
+    }
+
+    const newPending = assignments.filter(
+      (a) => a.status === 'pending' && !seenAssignmentIds.current.has(a.id)
+    );
+    assignments.forEach((a) => seenAssignmentIds.current.add(a.id));
+
+    if (newPending.length === 0) return;
+
+    const fire = async () => {
+      const permission =
+        Notification.permission === 'granted'
+          ? 'granted'
+          : await Notification.requestPermission();
+      if (permission !== 'granted') return;
+
+      for (const assignment of newPending) {
+        const task = tasks.find((t) => t.id === assignment.taskId);
+        new Notification('🚨 New Mission!', {
+          body: task?.title ?? 'You have a new task waiting!',
+          icon: '/icon.png',
+        });
+      }
+    };
+
+    fire();
+  }, [assignments, tasks]);
 
   // ── Real-time listeners ────────────────────────────────────────────────────
 

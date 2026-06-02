@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import { doc, updateDoc } from 'firebase/firestore';
@@ -27,6 +28,7 @@ export function useNotifications(
 
   useEffect(() => {
     if (!currentParticipant) return;
+    if (Platform.OS === 'web') return; // Web push requires VAPID setup — skip on web
 
     // Register for push notifications
     const register = async () => {

@@ -19,15 +19,21 @@ const app = isNew ? initializeApp(firebaseConfig) : getApp();
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
-// Use getReactNativePersistence via require so Metro resolves the RN-specific
-// bundle (which exports this function) rather than the browser build.
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { getReactNativePersistence } = require('firebase/auth');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const AsyncStorage = require('@react-native-async-storage/async-storage').default;
+function createAuth() {
+  if (!isNew) return getAuth(app);
+  // On web, navigator.product is undefined; on React Native it is 'ReactNative'.
+  // getReactNativePersistence only exists in the Metro/RN bundle, not the web bundle.
+  const isNative = typeof navigator !== 'undefined' && navigator.product === 'ReactNative';
+  if (!isNative) {
+    return initializeAuth(app);
+  }
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { getReactNativePersistence } = require('firebase/auth');
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const AsyncStorage = require('@react-native-async-storage/async-storage').default;
+  return initializeAuth(app, { persistence: getReactNativePersistence(AsyncStorage) });
+}
 
-export const auth = isNew
-  ? initializeAuth(app, { persistence: getReactNativePersistence(AsyncStorage) })
-  : getAuth(app);
+export const auth = createAuth();
 
 export default app;

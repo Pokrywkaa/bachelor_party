@@ -51,6 +51,31 @@ const PUNISHMENTS = [
   { icon: '🍋', title: 'Lemon Challenge', description: 'Eat a full lemon slice without making a face.' },
 ];
 
+// ─── Helpers ──────────────────────────────────────────────────────────────
+
+/** Deletes all documents in a collection (in batches of 100). */
+async function deleteCollection(db, colRef) {
+  const snap = await colRef.get();
+  if (snap.empty) return;
+  const BATCH_SIZE = 100;
+  for (let i = 0; i < snap.docs.length; i += BATCH_SIZE) {
+    const batch = db.batch();
+    snap.docs.slice(i, i + BATCH_SIZE).forEach((doc) => batch.delete(doc.ref));
+    await batch.commit();
+  }
+}
+
+/** Recursively wipes all sub-collections and the document itself. */
+async function wipeEvent(db, eventRef) {
+  const SUBCOLS = ['participants', 'tasks', 'assignments', 'submissions', 'rewards', 'punishments'];
+  for (const name of SUBCOLS) {
+    await deleteCollection(db, eventRef.collection(name));
+    console.log(`🗑️  Cleared ${name}`);
+  }
+  await eventRef.delete();
+  console.log('🗑️  Deleted event document');
+}
+
 // ─── Seed logic ───────────────────────────────────────────────────────────
 
 async function seed() {
@@ -68,13 +93,20 @@ async function seed() {
 
   const eventRef = db.collection('events').doc(EVENT_ID);
 
+  // ── Wipe existing data ─────────────────────────────────────────────────
+  console.log('🔥 Wiping existing data...');
+  await wipeEvent(db, eventRef);
+  console.log('');
+
+  // ── Re-seed ────────────────────────────────────────────────────────────
+
   // Create event metadata
   await eventRef.set({
     id: EVENT_ID,
     name: "Adam's Bachelor Party",
     date: new Date().toISOString().split('T')[0],
     createdAt: admin.firestore.FieldValue.serverTimestamp(),
-  }, { merge: true });
+  });
   console.log('✅ Event metadata set');
 
   // Seed participants

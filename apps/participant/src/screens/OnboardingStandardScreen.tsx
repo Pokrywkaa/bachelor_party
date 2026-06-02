@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  View, Text, StyleSheet, FlatList, TouchableOpacity, useWindowDimensions,
+  View, Text, StyleSheet, TouchableOpacity,
 } from 'react-native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/AppNavigator';
@@ -50,14 +50,13 @@ const SLIDES = [
 ];
 
 export default function OnboardingStandardScreen({ navigation }: Props) {
-  const { width } = useWindowDimensions();
   const { setHasCompletedOnboarding } = useParticipantStore();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const flatListRef = useRef<FlatList>(null);
+
+  const slide = SLIDES[currentIndex];
 
   const goNext = () => {
     if (currentIndex < SLIDES.length - 1) {
-      flatListRef.current?.scrollToIndex({ index: currentIndex + 1 });
       setCurrentIndex(currentIndex + 1);
     } else {
       setHasCompletedOnboarding(true);
@@ -67,22 +66,11 @@ export default function OnboardingStandardScreen({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        ref={flatListRef}
-        data={SLIDES}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        scrollEnabled={false}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={[styles.slide, { width }]}>
-            <Text style={styles.emoji}>{item.emoji}</Text>
-            <Text style={styles.title}>{item.title}</Text>
-            <Text style={styles.body}>{item.body}</Text>
-          </View>
-        )}
-      />
+      <View style={styles.slide}>
+        <Text style={styles.emoji}>{slide.emoji}</Text>
+        <Text style={styles.title}>{slide.title}</Text>
+        <Text style={styles.body}>{slide.body}</Text>
+      </View>
 
       <View style={styles.dots}>
         {SLIDES.map((_, i) => (
