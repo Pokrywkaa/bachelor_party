@@ -15,7 +15,7 @@ import LeaderboardScreen from '../screens/LeaderboardScreen';
 import HistoryScreen from '../screens/HistoryScreen';
 
 export type RootStackParamList = {
-  NameEntry: undefined;
+  Armagedon: undefined;
   OnboardingGroom: undefined;
   OnboardingStandard: undefined;
   Main: undefined;
@@ -64,7 +64,7 @@ export default function Navigation() {
   const { currentParticipant, hasCompletedOnboarding } = useParticipantStore();
 
   const getInitialRoute = (): keyof RootStackParamList => {
-    if (!currentParticipant) return 'NameEntry';
+    if (!currentParticipant) return 'Armagedon';
     if (!hasCompletedOnboarding) {
       return currentParticipant.isGroom ? 'OnboardingGroom' : 'OnboardingStandard';
     }
@@ -77,7 +77,7 @@ export default function Navigation() {
         initialRouteName={getInitialRoute()}
         screenOptions={{ headerShown: false }}
       >
-        <Stack.Screen name="NameEntry" component={NameEntryScreen} />
+        <Stack.Screen name="Armagedon" component={NameEntryScreen} />
         <Stack.Screen name="OnboardingGroom" component={OnboardingGroomScreen} />
         <Stack.Screen name="OnboardingStandard" component={OnboardingStandardScreen} />
         <Stack.Screen name="Main" component={MainTabs} />
@@ -90,3 +90,4 @@ export default function Navigation() {
     </NavigationContainer>
   );
 }
+

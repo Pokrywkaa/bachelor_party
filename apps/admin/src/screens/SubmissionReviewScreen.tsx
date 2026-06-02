@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View, Text, StyleSheet, ScrollView, TouchableOpacity,
   SafeAreaView, Alert, ActivityIndicator, TextInput,
 } from 'react-native';
 import { Image } from 'react-native';
 import { useVideoPlayer, VideoView } from 'expo-video';
+import { useAudioPlayer } from 'expo-audio';
 import { doc, updateDoc, addDoc, collection } from 'firebase/firestore';
 import { db, EVENT_ID, calculatePoints } from '@bachelor-party/shared';
 import { useAdminStore } from '../store/adminStore';
@@ -24,6 +25,55 @@ function VideoViewInline({ uri }: { uri: string }) {
   const player = useVideoPlayer(uri, (p) => { p.loop = false; });
   return (
     <VideoView player={player} style={styles.media} contentFit="contain" nativeControls />
+  );
+}
+
+// Inner component so useAudioPlayer hook is always called unconditionally
+function AudioPlayerInline({ uri }: { uri: string }) {
+  const player = useAudioPlayer(uri);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(player.currentTime ?? 0);
+      setDuration(player.duration ?? 0);
+    }, 250);
+    return () => clearInterval(interval);
+  }, [player]);
+
+  const progress = duration > 0 ? Math.min(currentTime / duration, 1) : 0;
+
+  const fmt = (s: number) => {
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return `${m}:${sec.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <View style={styles.audioCard}>
+      <Text style={styles.audioText}>🎙️ Audio submission</Text>
+
+      {/* Progress bar */}
+      <View style={styles.audioTimeline}>
+        <View style={[styles.audioProgressFill, { flex: progress || 0.001 }]} />
+        <View style={{ flex: 1 - (progress || 0.001) }} />
+      </View>
+
+      {/* Time labels */}
+      <View style={styles.audioTimeRow}>
+        <Text style={styles.audioTimeText}>{fmt(currentTime)}</Text>
+        <Text style={styles.audioTimeText}>{duration > 0 ? fmt(duration) : '--:--'}</Text>
+      </View>
+
+      {/* Play / Pause */}
+      <TouchableOpacity
+        style={styles.audioPlayButton}
+        onPress={() => player.playing ? player.pause() : player.play()}
+      >
+        <Text style={styles.audioPlayButtonText}>{player.playing ? '⏸️ Pause' : '▶️ Play'}</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
@@ -108,10 +158,7 @@ export default function SubmissionReviewScreen({ navigation, route }: Props) {
           <VideoViewInline uri={submission.mediaUrl} />
         )}
         {submission.mediaUrl && submission.mediaType === 'audio' && (
-          <View style={styles.audioCard}>
-            <Text style={styles.audioText}>🎙️ Audio submission</Text>
-            <Text style={styles.audioUrl} numberOfLines={1}>{submission.mediaUrl}</Text>
-          </View>
+          <AudioPlayerInline uri={submission.mediaUrl} />
         )}
 
         {/* Text answer */}
@@ -248,9 +295,14 @@ const styles = StyleSheet.create({
   lateBadge: { color: '#fca5a5', fontSize: 13, marginBottom: 4 },
   submittedAt: { color: '#475569', fontSize: 12 },
   media: { width: '100%', height: 280, borderRadius: 12, backgroundColor: '#000', marginBottom: 16 },
-  audioCard: { backgroundColor: '#1e293b', borderRadius: 12, padding: 16, marginBottom: 16, alignItems: 'center' },
-  audioText: { color: '#94a3b8', fontSize: 16, marginBottom: 4 },
-  audioUrl: { color: '#475569', fontSize: 11 },
+  audioCard: { backgroundColor: '#1e293b', borderRadius: 12, padding: 16, marginBottom: 16 },
+  audioText: { color: '#94a3b8', fontSize: 16, marginBottom: 12, textAlign: 'center' },
+  audioTimeline: { flexDirection: 'row', height: 6, borderRadius: 3, backgroundColor: '#334155', overflow: 'hidden', marginBottom: 6 },
+  audioProgressFill: { height: '100%', backgroundColor: '#0284c7', borderRadius: 3 },
+  audioTimeRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 14 },
+  audioTimeText: { color: '#64748b', fontSize: 12 },
+  audioPlayButton: { backgroundColor: '#0284c7', borderRadius: 10, paddingVertical: 10, alignItems: 'center' },
+  audioPlayButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
   answerCard: { backgroundColor: '#1e293b', borderRadius: 12, padding: 16, marginBottom: 16 },
   answerLabel: { color: '#64748b', fontSize: 12, marginBottom: 6 },
   answerText: { color: '#f1f5f9', fontSize: 16 },

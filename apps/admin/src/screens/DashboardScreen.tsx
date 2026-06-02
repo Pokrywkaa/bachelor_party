@@ -23,8 +23,14 @@ export default function DashboardScreen() {
 
   const [triggerModalVisible, setTriggerModalVisible] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [selectedParticipantId, setSelectedParticipantId] = useState<string>('');
+  const [selectedParticipantIds, setSelectedParticipantIds] = useState<string[]>([]);
   const [triggering, setTriggering] = useState(false);
+
+  const toggleParticipant = (id: string) => {
+    setSelectedParticipantIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+  };
 
   // ── Live data ────────────────────────────────────────────────────────────────
 
@@ -55,7 +61,7 @@ export default function DashboardScreen() {
   // ── Trigger task ─────────────────────────────────────────────────────────────
 
   const triggerTask = async () => {
-    if (!selectedTask || !selectedParticipantId || !currentAdmin) return;
+    if (!selectedTask || selectedParticipantIds.length === 0 || !currentAdmin) return;
     setTriggering(true);
     try {
       const now = new Date();
@@ -63,19 +69,23 @@ export default function DashboardScreen() {
         ? new Date(now.getTime() + selectedTask.durationSeconds * 1000).toISOString()
         : null;
 
-      await addDoc(collection(db, 'events', EVENT_ID, 'assignments'), {
-        taskId: selectedTask.id,
-        participantId: selectedParticipantId,
-        triggeredBy: currentAdmin.id,
-        triggeredAt: now.toISOString(),
-        expiresAt,
-        status: 'pending',
-      } as Omit<Assignment, 'id'>);
+      await Promise.all(
+        selectedParticipantIds.map((participantId) =>
+          addDoc(collection(db, 'events', EVENT_ID, 'assignments'), {
+            taskId: selectedTask.id,
+            participantId,
+            triggeredBy: currentAdmin.id,
+            triggeredAt: now.toISOString(),
+            expiresAt,
+            status: 'pending',
+          } as Omit<Assignment, 'id'>)
+        )
+      );
 
       setTriggerModalVisible(false);
       setSelectedTask(null);
-      setSelectedParticipantId('');
-      Alert.alert('Task triggered!', `"${selectedTask.title}" sent.`);
+      setSelectedParticipantIds([]);
+      Alert.alert('Task triggered!', `"${selectedTask.title}" sent to ${selectedParticipantIds.length} participant${selectedParticipantIds.length > 1 ? 's' : ''}.`);
     } catch (e) {
       Alert.alert('Error', 'Could not trigger task. Try again.');
     } finally {
@@ -165,19 +175,24 @@ export default function DashboardScreen() {
               )}
             />
 
-            <Text style={styles.modalLabel}>Assign to:</Text>
+            <Text style={styles.modalLabel}>Assign to (tap to select multiple):</Text>
             <FlatList
               data={nonAdminParticipants}
               keyExtractor={(p) => p.id}
               style={styles.modalList}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={[styles.modalItem, selectedParticipantId === item.id && styles.modalItemSelected]}
-                  onPress={() => setSelectedParticipantId(item.id)}
-                >
-                  <Text style={styles.modalItemText}>{item.name}{item.isGroom ? ' 👑' : ''}</Text>
-                </TouchableOpacity>
-              )}
+              renderItem={({ item }) => {
+                const selected = selectedParticipantIds.includes(item.id);
+                return (
+                  <TouchableOpacity
+                    style={[styles.modalItem, selected && styles.modalItemSelected]}
+                    onPress={() => toggleParticipant(item.id)}
+                  >
+                    <Text style={styles.modalItemText}>
+                      {selected ? '✓ ' : ''}{item.name}{item.isGroom ? ' 👑' : ''}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
             />
 
             <View style={styles.modalButtons}>
@@ -185,11 +200,13 @@ export default function DashboardScreen() {
                 <Text style={styles.modalCancelText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.modalConfirm, (!selectedTask || !selectedParticipantId) && styles.buttonDisabled]}
+                style={[styles.modalConfirm, (!selectedTask || selectedParticipantIds.length === 0) && styles.buttonDisabled]}
                 onPress={triggerTask}
-                disabled={!selectedTask || !selectedParticipantId || triggering}
+                disabled={!selectedTask || selectedParticipantIds.length === 0 || triggering}
               >
-                {triggering ? <ActivityIndicator color="#fff" /> : <Text style={styles.modalConfirmText}>Send 🚀</Text>}
+                {triggering
+                  ? <ActivityIndicator color="#fff" />
+                  : <Text style={styles.modalConfirmText}>Send to {selectedParticipantIds.length || '?'} 🚀</Text>}
               </TouchableOpacity>
             </View>
           </View>

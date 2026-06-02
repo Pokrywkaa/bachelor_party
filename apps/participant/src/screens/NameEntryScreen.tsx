@@ -13,7 +13,7 @@ import type { RootStackParamList } from '../navigation/AppNavigator';
 import type { Participant } from '@bachelor-party/shared';
 
 type Props = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'NameEntry'>;
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Armagedon'>;
 };
 
 export default function NameEntryScreen({ navigation }: Props) {
