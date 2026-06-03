@@ -23,7 +23,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1a0a2e"
       },
-      "package": "com.bachelorparty.participant"
+      "package": "com.bachelorparty.participant",
+      "softwareKeyboardLayoutMode": "pan"
     },
     "plugins": [
       "expo-camera",

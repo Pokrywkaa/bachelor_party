@@ -3,15 +3,9 @@
 export type TaskType =
   | 'photo'       // Take a photo
   | 'video'       // Record a video
-  | 'timed'       // Complete within a time limit and confirm
   | 'quiz'        // Answer a question (multiple choice or free text)
-  | 'gps'         // Check in at a GPS location
   | 'audio'       // Record an audio clip
-  | 'dare'        // Accept or reject a dare
-  | 'creative'    // Free-form text + optional media
-  | 'social'      // Post on social media + screenshot proof
-  | 'memory'      // Answer a memory question about the groom
-  | 'physical';   // Physical challenge (video proof)
+  | 'dare';       // Accept or reject a dare
 
 // ─── Roles ───────────────────────────────────────────────────────────────────
 

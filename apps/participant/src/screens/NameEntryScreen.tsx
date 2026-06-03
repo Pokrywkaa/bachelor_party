@@ -72,7 +72,8 @@ export default function NameEntryScreen({ navigation }: Props) {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'android' ? 24 : 0}
     >
       <View style={styles.inner}>
         <Text style={styles.emoji}>🎉</Text>

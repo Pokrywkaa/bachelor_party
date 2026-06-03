@@ -17,7 +17,7 @@ type Props = {
 };
 
 const TASK_TYPES: TaskType[] = [
-  'photo', 'video', 'timed', 'quiz', 'gps', 'audio', 'dare', 'creative', 'social', 'memory', 'physical',
+  'photo', 'video', 'quiz', 'audio', 'dare',
 ];
 
 export default function CreateEditTaskScreen({ navigation, route }: Props) {

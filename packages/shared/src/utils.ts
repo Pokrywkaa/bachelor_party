@@ -46,15 +46,9 @@ export function taskTypeLabel(type: string): string {
   const labels: Record<string, string> = {
     photo: '📸 Photo',
     video: '🎥 Video',
-    timed: '⏱️ Timed',
     quiz: '🧠 Quiz',
-    gps: '📍 GPS Check-In',
     audio: '🎙️ Audio',
     dare: '😈 Dare',
-    creative: '🎨 Creative',
-    social: '📱 Social Media',
-    memory: '🧩 Memory',
-    physical: '💪 Physical',
   };
   return labels[type] ?? type;
 }

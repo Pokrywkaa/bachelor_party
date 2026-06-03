@@ -17,10 +17,7 @@ import PhotoTask from '../components/tasks/PhotoTask';
 import VideoTask from '../components/tasks/VideoTask';
 import AudioTask from '../components/tasks/AudioTask';
 import QuizTask from '../components/tasks/QuizTask';
-import GpsTask from '../components/tasks/GpsTask';
-import TimedTask from '../components/tasks/TimedTask';
 import DareTask from '../components/tasks/DareTask';
-import CreativeTask from '../components/tasks/CreativeTask';
 import CountdownRing from '../components/CountdownRing';
 
 type Props = {
@@ -158,19 +155,11 @@ export default function TaskScreen({ navigation, route }: Props) {
             onResult={(r) => setResult(r)}
           />
         );
-      case 'gps':
-        return <GpsTask target={task.gpsTarget!} onResult={(r) => setResult(r)} />;
-      case 'timed':
-        return <TimedTask description={task.description} onResult={(r) => setResult(r)} />;
+
       case 'dare':
         return <DareTask description={task.description} onResult={(r) => setResult(r)} />;
-      case 'creative':
-      case 'social':
-      case 'memory':
-      case 'physical':
-        return <CreativeTask type={task.type} description={task.description} onResult={(r) => setResult(r)} />;
       default:
-        return <CreativeTask type={task.type} description={task.description} onResult={(r) => setResult(r)} />;
+        return null;
     }
   };
 
@@ -178,8 +167,7 @@ export default function TaskScreen({ navigation, route }: Props) {
     if (!task.mediaRequired) return true;
     if (['photo', 'video', 'audio'].includes(task.type)) return !!result.mediaUri;
     if (task.type === 'quiz') return !!result.answer;
-    if (task.type === 'gps') return !!result.location;
-    if (['timed', 'dare'].includes(task.type)) return result.confirmed === true;
+    if (task.type === 'dare') return result.confirmed === true;
     return true;
   };
 
