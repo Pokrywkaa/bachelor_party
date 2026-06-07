@@ -23,10 +23,10 @@ export default function LeaderboardScreen() {
           {item.isGroom && <Text style={styles.groomCrown}>👑</Text>}
         </View>
         <View style={styles.nameCol}>
-          <Text style={styles.name}>{item.name}{isMe ? ' (you)' : ''}</Text>
-          <Text style={styles.role}>{item.role === 'admin' ? '⚙️ Admin' : '🎮 Participant'}</Text>
+          <Text style={styles.name}>{item.name}{isMe ? ' (Ty)' : ''}</Text>
+          <Text style={styles.role}>{item.role === 'admin' ? '⚙️ Organizator' : '🎮 Uczestnik'}</Text>
         </View>
-        <Text style={[styles.score, { color: rankColor }]}>{item.score} pts</Text>
+        <Text style={[styles.score, { color: rankColor }]}>{item.score} pkt</Text>
       </View>
     );
   };
@@ -34,13 +34,13 @@ export default function LeaderboardScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.title}>🏆 Leaderboard</Text>
+        <Text style={styles.title}>🏆 Ranking</Text>
         <FlatList
           data={participants}
           keyExtractor={(p) => p.id}
           renderItem={renderItem}
           contentContainerStyle={styles.list}
-          ListEmptyComponent={<Text style={styles.empty}>No participants yet</Text>}
+          ListEmptyComponent={<Text style={styles.empty}>Brak uczestnikow</Text>}
         />
       </View>
     </SafeAreaView>

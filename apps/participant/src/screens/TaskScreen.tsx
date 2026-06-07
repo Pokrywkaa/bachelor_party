@@ -108,7 +108,7 @@ export default function TaskScreen({ navigation, route }: Props) {
 
       setSubmitted(true);
     } catch (error) {
-      Alert.alert('Upload failed', 'Could not submit your response. Please try again.');
+      Alert.alert('Blad wysylania', 'Nie udalo sie wyslac odpowiedzi. Sprobuj ponownie.');
       console.error(error);
     } finally {
       setSubmitting(false);
@@ -118,9 +118,9 @@ export default function TaskScreen({ navigation, route }: Props) {
   if (!task || !assignment) {
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={styles.errorText}>Task not found.</Text>
+        <Text style={styles.errorText}>Nie znaleziono zadania.</Text>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backButtonText}>← Back</Text>
+          <Text style={styles.backButtonText}>← Wroc</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -130,11 +130,11 @@ export default function TaskScreen({ navigation, route }: Props) {
     return (
       <SafeAreaView style={[styles.container, styles.centeredContainer]}>
         <Text style={styles.doneEmoji}>✅</Text>
-        <Text style={styles.doneTitle}>Submitted!</Text>
-        <Text style={styles.doneSub}>Waiting for admin review...</Text>
-        {isLate && <Text style={styles.lateWarning}>⚠️ Submitted late — 25% point deduction applies</Text>}
+        <Text style={styles.doneTitle}>Wyslano!</Text>
+        <Text style={styles.doneSub}>Czekamy na ocene organizatora...</Text>
+        {isLate && <Text style={styles.lateWarning}>⚠️ Wyslano po czasie - obowiazuje kara 25% punktow</Text>}
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
-          <Text style={styles.buttonText}>Back to Home</Text>
+          <Text style={styles.buttonText}>Wroc do startu</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -177,7 +177,7 @@ export default function TaskScreen({ navigation, route }: Props) {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Text style={styles.backText}>← Back</Text>
+            <Text style={styles.backText}>← Wroc</Text>
           </TouchableOpacity>
           {remainingSeconds !== null && task.durationSeconds && (
             <CountdownRing
@@ -190,7 +190,7 @@ export default function TaskScreen({ navigation, route }: Props) {
 
         {isLate && (
           <View style={styles.lateBanner}>
-            <Text style={styles.lateBannerText}>⏰ Time's up! You can still submit (–25% points)</Text>
+            <Text style={styles.lateBannerText}>⏰ Czas minął! Nadal możesz wysłać (–25% punktów)</Text>
           </View>
         )}
 
@@ -199,7 +199,7 @@ export default function TaskScreen({ navigation, route }: Props) {
           <Text style={styles.taskType}>{taskTypeLabel(task.type)}</Text>
           <Text style={styles.taskTitle}>{task.title}</Text>
           <Text style={styles.taskDesc}>{task.description}</Text>
-          <Text style={styles.taskPoints}>🏆 {task.points} points</Text>
+          <Text style={styles.taskPoints}>🏆 {task.points} punktów</Text>
         </View>
 
         {/* Task-specific UI */}
@@ -216,7 +216,7 @@ export default function TaskScreen({ navigation, route }: Props) {
           {submitting ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.submitText}>Submit Mission ✅</Text>
+            <Text style={styles.submitText}>Wyślij misje ✅</Text>
           )}
         </TouchableOpacity>
       </ScrollView>

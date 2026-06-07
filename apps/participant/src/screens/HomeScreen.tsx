@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView, Platform,
 } from 'react-native';
@@ -58,8 +58,8 @@ export default function HomeScreen({ navigation }: Props) {
 
       for (const assignment of newPending) {
         const task = tasks.find((t) => t.id === assignment.taskId);
-        new Notification('🚨 New Mission!', {
-          body: task?.title ?? 'You have a new task waiting!',
+        new Notification('🚨 Nowa misja!', {
+          body: task?.title ?? 'Czeka na Ciebie nowe zadanie!',
           icon: '/icon.png',
         });
       }
@@ -130,9 +130,24 @@ export default function HomeScreen({ navigation }: Props) {
 
   const myRank = participants.findIndex((p) => p.id === currentParticipant?.id) + 1;
 
-  const expiresAtSeconds = pendingAssignment?.expiresAt
-    ? Math.max(0, Math.floor((new Date(pendingAssignment.expiresAt).getTime() - Date.now()) / 1000))
-    : null;
+  // ── Live countdown ────────────────────────────────────────────────────────
+  const calcRemaining = () =>
+    pendingAssignment?.expiresAt
+      ? Math.max(0, Math.floor((new Date(pendingAssignment.expiresAt).getTime() - Date.now()) / 1000))
+      : null;
+
+  const [expiresAtSeconds, setExpiresAtSeconds] = useState<number | null>(calcRemaining);
+
+  useEffect(() => {
+    setExpiresAtSeconds(calcRemaining());
+    if (!pendingAssignment?.expiresAt) return;
+    const interval = setInterval(() => {
+      const remaining = calcRemaining();
+      setExpiresAtSeconds(remaining);
+      if (remaining === 0) clearInterval(interval);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [pendingAssignment?.expiresAt]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -140,19 +155,19 @@ export default function HomeScreen({ navigation }: Props) {
         {/* Header */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.greeting}>Hey, {currentParticipant?.name} {currentParticipant?.isGroom ? '👑' : '👋'}</Text>
-            <Text style={styles.subGreeting}>Stay alert — a mission could drop any second!</Text>
+            <Text style={styles.greeting}>Cześć, {currentParticipant?.name} {currentParticipant?.isGroom ? '👑' : '👋'}</Text>
+            <Text style={styles.subGreeting}>Bądź czujny - nowa misja może wpaść w każdej chwili!</Text>
           </View>
           <View style={styles.scoreBadge}>
-            <Text style={styles.scoreLabel}>RANK</Text>
+            <Text style={styles.scoreLabel}>MIEJSCE</Text>
             <Text style={styles.scoreValue}>#{myRank || '—'}</Text>
           </View>
         </View>
 
         {/* Score card */}
         <View style={styles.scoreCard}>
-          <Text style={styles.scoreCardLabel}>Your Score</Text>
-          <Text style={styles.scoreCardValue}>{currentParticipant?.score ?? 0} pts</Text>
+          <Text style={styles.scoreCardLabel}>Twój wynik</Text>
+          <Text style={styles.scoreCardValue}>{currentParticipant?.score ?? 0} pkt</Text>
         </View>
 
         {/* Active task */}
@@ -162,7 +177,7 @@ export default function HomeScreen({ navigation }: Props) {
             onPress={() => navigation.navigate('Task', { assignmentId: pendingAssignment.id })}
           >
             <View style={styles.taskCardHeader}>
-              <Text style={styles.taskCardBadge}>🎯 ACTIVE MISSION</Text>
+              <Text style={styles.taskCardBadge}>🎯 AKTYWNA MISJA</Text>
               {expiresAtSeconds !== null && (
                 <CountdownRing totalSeconds={activeTask.durationSeconds ?? 0} remainingSeconds={expiresAtSeconds} />
               )}
@@ -171,38 +186,54 @@ export default function HomeScreen({ navigation }: Props) {
             <Text style={styles.taskCardType}>{taskTypeLabel(activeTask.type)}</Text>
             <Text style={styles.taskCardDesc} numberOfLines={2}>{activeTask.description}</Text>
             <View style={styles.taskCardFooter}>
-              <Text style={styles.taskCardPoints}>+{activeTask.points} pts</Text>
-              <Text style={styles.taskCardCta}>Tap to open →</Text>
+              <Text style={styles.taskCardPoints}>+{activeTask.points} pkt</Text>
+              <Text style={styles.taskCardCta}>Kliknij, aby otworzyć →</Text>
             </View>
           </TouchableOpacity>
         ) : (
           <View style={styles.noTaskCard}>
             <Text style={styles.noTaskEmoji}>😴</Text>
-            <Text style={styles.noTaskText}>No active mission right now</Text>
-            <Text style={styles.noTaskSub}>The admin will send one soon...</Text>
+            <Text style={styles.noTaskText}>Brak aktywnej misji</Text>
+            <Text style={styles.noTaskSub}>Organizator wkrótce wyśle kolejną...</Text>
           </View>
         )}
 
         {/* Recent submissions */}
-        <Text style={styles.sectionTitle}>Recent Activity</Text>
+        <Text style={styles.sectionTitle}>Ostatnia aktywność</Text>
         {submissions.slice(0, 3).map((sub) => {
           const task = tasks.find((t) => t.id === sub.taskId);
+          const verdictLabel =
+            sub.verdict === 'approved'
+              ? 'ZATWIERDZONE'
+              : sub.verdict === 'rejected'
+                ? 'ODRZUCONE'
+                : 'OCZEKUJE';
           return (
             <View key={sub.id} style={styles.historyItem}>
-              <Text style={styles.historyTitle}>{task?.title ?? 'Task'}</Text>
+              <Text style={styles.historyTitle}>{task?.title ?? 'Zadanie'}</Text>
               <Text style={[styles.historyStatus,
                 sub.verdict === 'approved' && styles.statusApproved,
                 sub.verdict === 'rejected' && styles.statusRejected,
                 !sub.verdict && styles.statusPending,
               ]}>
-                {sub.verdict ? sub.verdict.toUpperCase() : 'PENDING'}
+                {verdictLabel}
               </Text>
             </View>
           );
         })}
         {submissions.length === 0 && (
-          <Text style={styles.emptyText}>No submissions yet</Text>
+          <Text style={styles.emptyText}>Brak zgłoszeń</Text>
         )}
+
+        {/* Replay onboarding */}
+        <TouchableOpacity
+          style={styles.introButton}
+          onPress={() =>
+            navigation.navigate(currentParticipant?.isGroom ? 'OnboardingGroom' : 'OnboardingStandard')
+          }
+        >
+          <Text style={styles.introButtonText}>📖 Obejrzyj intro ponownie</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -270,4 +301,14 @@ const styles = StyleSheet.create({
   statusRejected: { color: '#f87171' },
   statusPending: { color: '#fbbf24' },
   emptyText: { color: '#6b7280', textAlign: 'center', marginTop: 8 },
+  introButton: {
+    marginTop: 24,
+    borderWidth: 1,
+    borderColor: '#4c1d95',
+    borderRadius: 12,
+    padding: 14,
+    alignItems: 'center',
+  },
+  introButtonText: { color: '#a78bfa', fontSize: 15 },
 });
+

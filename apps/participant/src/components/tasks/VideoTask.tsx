@@ -16,7 +16,7 @@ export default function VideoTask({ maxDuration, onResult }: Props) {
   const recordVideo = async () => {
     const perm = await ImagePicker.requestCameraPermissionsAsync();
     if (!perm.granted) {
-      Alert.alert('Permission required', 'Camera access is needed to record video.');
+      Alert.alert('Wymagane uprawnienie', 'Aby nagrac wideo, potrzebny jest dostep do aparatu.');
       return;
     }
     const result = await ImagePicker.launchCameraAsync({
@@ -54,14 +54,14 @@ export default function VideoTask({ maxDuration, onResult }: Props) {
       ) : (
         <View style={styles.placeholder}>
           <Text style={styles.placeholderEmoji}>🎥</Text>
-          <Text style={styles.placeholderText}>Max duration: {maxDuration}s</Text>
+          <Text style={styles.placeholderText}>Maksymalny czas: {maxDuration}s</Text>
         </View>
       )}
       <TouchableOpacity style={styles.button} onPress={recordVideo}>
-        <Text style={styles.buttonText}>🎬 Record Video</Text>
+        <Text style={styles.buttonText}>🎬 Nagraj wideo</Text>
       </TouchableOpacity>
       <TouchableOpacity style={[styles.button, styles.buttonSecondary]} onPress={pickVideo}>
-        <Text style={styles.buttonText}>📁 Pick from Gallery</Text>
+        <Text style={styles.buttonText}>📁 Wybierz z galerii</Text>
       </TouchableOpacity>
     </View>
   );

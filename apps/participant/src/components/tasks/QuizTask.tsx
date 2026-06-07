@@ -28,10 +28,10 @@ export default function QuizTask({ options, onResult }: Props) {
   if (isFreeText) {
     return (
       <View style={styles.container}>
-        <Text style={styles.label}>Your Answer:</Text>
+        <Text style={styles.label}>Twoja odpowiedz:</Text>
         <TextInput
           style={styles.textInput}
-          placeholder="Type your answer here..."
+          placeholder="Wpisz odpowiedz..."
           placeholderTextColor="#6b7280"
           value={freeText}
           onChangeText={handleTextChange}
@@ -44,7 +44,7 @@ export default function QuizTask({ options, onResult }: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Choose the correct answer:</Text>
+      <Text style={styles.label}>Wybierz poprawna odpowiedz:</Text>
       {options.map((opt) => (
         <TouchableOpacity
           key={opt.id}

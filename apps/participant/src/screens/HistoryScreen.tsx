@@ -5,11 +5,11 @@ import { taskTypeLabel } from '@bachelor-party/shared';
 import type { Assignment } from '@bachelor-party/shared';
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; emoji: string }> = {
-  pending: { label: 'Pending', color: '#fbbf24', emoji: '⏳' },
-  submitted: { label: 'Under Review', color: '#60a5fa', emoji: '🔍' },
-  approved: { label: 'Approved', color: '#4ade80', emoji: '✅' },
-  rejected: { label: 'Rejected', color: '#f87171', emoji: '❌' },
-  expired: { label: 'Expired', color: '#6b7280', emoji: '⌛' },
+  pending: { label: 'Oczekuje', color: '#fbbf24', emoji: '⏳' },
+  submitted: { label: 'W ocenie', color: '#60a5fa', emoji: '🔍' },
+  approved: { label: 'Zatwierdzone', color: '#4ade80', emoji: '✅' },
+  rejected: { label: 'Odrzucone', color: '#f87171', emoji: '❌' },
+  expired: { label: 'Wygaslo', color: '#6b7280', emoji: '⌛' },
 };
 
 export default function HistoryScreen() {
@@ -27,7 +27,7 @@ export default function HistoryScreen() {
         <View style={styles.cardHeader}>
           <View style={styles.cardLeft}>
             <Text style={styles.taskType}>{task ? taskTypeLabel(task.type) : ''}</Text>
-            <Text style={styles.taskTitle}>{task?.title ?? 'Unknown Task'}</Text>
+            <Text style={styles.taskTitle}>{task?.title ?? 'Nieznane zadanie'}</Text>
             <Text style={styles.triggeredAt}>
               {new Date(item.triggeredAt).toLocaleString()}
             </Text>
@@ -40,31 +40,31 @@ export default function HistoryScreen() {
 
         {submission?.rating && (
           <Text style={styles.rating}>
-            Rating: {'⭐'.repeat(submission.rating)}
+            Ocena: {'⭐'.repeat(submission.rating)}
           </Text>
         )}
 
         {submission?.pointsAwarded !== undefined && (
           <Text style={[styles.points, { color: submission.pointsAwarded > 0 ? '#4ade80' : '#6b7280' }]}>
-            {submission.pointsAwarded > 0 ? `+${submission.pointsAwarded} pts` : '0 pts'}
-            {submission.isLate ? ' (late)' : ''}
+            {submission.pointsAwarded > 0 ? `+${submission.pointsAwarded} pkt` : '0 pkt'}
+            {submission.isLate ? ' (po czasie)' : ''}
           </Text>
         )}
 
         {reward && (
           <View style={styles.rewardBadge}>
-            <Text>{reward.icon} Reward: {reward.title}</Text>
+            <Text>{reward.icon} Nagroda: {reward.title}</Text>
           </View>
         )}
 
         {punishment && (
           <View style={styles.punishmentBadge}>
-            <Text>{punishment.icon} Punishment: {punishment.title}</Text>
+            <Text>{punishment.icon} Kara: {punishment.title}</Text>
           </View>
         )}
 
         {submission?.adminNote && (
-          <Text style={styles.adminNote}>Admin note: "{submission.adminNote}"</Text>
+          <Text style={styles.adminNote}>Notatka organizatora: "{submission.adminNote}"</Text>
         )}
       </View>
     );
@@ -77,7 +77,7 @@ export default function HistoryScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.title}>📋 Mission History</Text>
+        <Text style={styles.title}>📋 Historia misji</Text>
         <FlatList
           data={sorted}
           keyExtractor={(a) => a.id}
@@ -86,8 +86,8 @@ export default function HistoryScreen() {
           ListEmptyComponent={
             <View style={styles.empty}>
               <Text style={styles.emptyEmoji}>📭</Text>
-              <Text style={styles.emptyText}>No missions yet</Text>
-              <Text style={styles.emptySub}>Your history will appear here after you receive tasks</Text>
+              <Text style={styles.emptyText}>Brak misji</Text>
+              <Text style={styles.emptySub}>Historia pojawi sie tutaj po otrzymaniu zadan</Text>
             </View>
           }
         />

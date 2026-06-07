@@ -13,7 +13,7 @@ export default function PhotoTask({ onResult }: Props) {
   const takePhoto = async () => {
     const perm = await ImagePicker.requestCameraPermissionsAsync();
     if (!perm.granted) {
-      Alert.alert('Permission required', 'Camera access is needed to take a photo.');
+      Alert.alert('Wymagane uprawnienie', 'Aby zrobic zdjecie, potrzebny jest dostep do aparatu.');
       return;
     }
     const result = await ImagePicker.launchCameraAsync({
@@ -30,7 +30,7 @@ export default function PhotoTask({ onResult }: Props) {
   const pickFromGallery = async () => {
     const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!perm.granted) {
-      Alert.alert('Permission required', 'Gallery access is needed.');
+      Alert.alert('Wymagane uprawnienie', 'Potrzebny jest dostep do galerii.');
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -49,20 +49,20 @@ export default function PhotoTask({ onResult }: Props) {
         <View>
           <Image source={{ uri }} style={styles.preview} />
           <TouchableOpacity style={styles.retakeButton} onPress={takePhoto}>
-            <Text style={styles.retakeText}>Retake Photo</Text>
+            <Text style={styles.retakeText}>Zrob zdjecie ponownie</Text>
           </TouchableOpacity>
         </View>
       ) : (
         <View style={styles.placeholder}>
           <Text style={styles.placeholderEmoji}>📸</Text>
-          <Text style={styles.placeholderText}>No photo taken yet</Text>
+          <Text style={styles.placeholderText}>Brak zdjecia</Text>
         </View>
       )}
       <TouchableOpacity style={styles.button} onPress={takePhoto}>
-        <Text style={styles.buttonText}>📷 Take Photo</Text>
+        <Text style={styles.buttonText}>📷 Zrob zdjecie</Text>
       </TouchableOpacity>
       <TouchableOpacity style={[styles.button, styles.buttonSecondary]} onPress={pickFromGallery}>
-        <Text style={styles.buttonText}>🖼️ Pick from Gallery</Text>
+        <Text style={styles.buttonText}>🖼️ Wybierz z galerii</Text>
       </TouchableOpacity>
     </View>
   );

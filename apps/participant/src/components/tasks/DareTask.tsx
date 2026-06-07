@@ -12,30 +12,30 @@ export default function DareTask({ description, onResult }: Props) {
 
   const choose = (v: 'done' | 'failed') => {
     setVerdict(v);
-    onResult({ confirmed: v === 'done', answer: v === 'done' ? 'Completed dare' : 'Failed dare' });
+    onResult({ confirmed: v === 'done', answer: v === 'done' ? 'Wyzwanie wykonane' : 'Wyzwanie nieudane' });
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.dareCard}>
         <Text style={styles.dareEmoji}>😈</Text>
-        <Text style={styles.dareInstruction}>Do you accept and complete the dare?</Text>
+        <Text style={styles.dareInstruction}>Podejmujesz i wykonujesz wyzwanie?</Text>
       </View>
 
       {verdict ? (
         <View style={[styles.resultCard, verdict === 'done' ? styles.successCard : styles.failCard]}>
           <Text style={styles.resultEmoji}>{verdict === 'done' ? '✅' : '❌'}</Text>
           <Text style={styles.resultText}>
-            {verdict === 'done' ? 'Dare completed! Awaiting review.' : 'Dare failed. Face the consequences.'}
+            {verdict === 'done' ? 'Wyzwanie wykonane! Czekaj na ocene.' : 'Wyzwanie nieudane. Czas na konsekwencje.'}
           </Text>
         </View>
       ) : (
         <View style={styles.buttons}>
           <TouchableOpacity style={[styles.button, styles.doneButton]} onPress={() => choose('done')}>
-            <Text style={styles.buttonText}>✅ Done!</Text>
+            <Text style={styles.buttonText}>✅ Zrobione!</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.button, styles.failButton]} onPress={() => choose('failed')}>
-            <Text style={styles.buttonText}>❌ I Failed</Text>
+            <Text style={styles.buttonText}>❌ Nie udalo sie</Text>
           </TouchableOpacity>
         </View>
       )}

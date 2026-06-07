@@ -32,7 +32,7 @@ export default function GpsTask({ target, onResult }: Props) {
     try {
       const { granted } = await Location.requestForegroundPermissionsAsync();
       if (!granted) {
-        Alert.alert('Permission required', 'Location access is needed for this task.');
+        Alert.alert('Wymagane uprawnienie', 'To zadanie wymaga dostepu do lokalizacji.');
         return;
       }
       const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
@@ -45,12 +45,12 @@ export default function GpsTask({ target, onResult }: Props) {
         onResult({ location: { latitude, longitude }, confirmed: true });
       } else {
         Alert.alert(
-          'Not close enough',
-          `You are ${Math.round(dist)}m away. You need to be within ${target.radiusMeters}m of "${target.label}".`
+          'Za daleko',
+          `Jestes ${Math.round(dist)} m od celu. Musisz byc w promieniu ${target.radiusMeters} m od "${target.label}".`
         );
       }
     } catch {
-      Alert.alert('Error', 'Could not get your location. Try again.');
+      Alert.alert('Blad', 'Nie udalo sie pobrac lokalizacji. Sprobuj ponownie.');
     } finally {
       setChecking(false);
     }
@@ -60,28 +60,28 @@ export default function GpsTask({ target, onResult }: Props) {
     <View style={styles.container}>
       <View style={styles.targetCard}>
         <Text style={styles.targetEmoji}>📍</Text>
-        <Text style={styles.targetLabel}>Target Location</Text>
+        <Text style={styles.targetLabel}>Lokalizacja celu</Text>
         <Text style={styles.targetName}>{target.label}</Text>
-        <Text style={styles.targetRadius}>Must be within {target.radiusMeters}m</Text>
+        <Text style={styles.targetRadius}>Musisz byc w promieniu {target.radiusMeters} m</Text>
       </View>
 
       {distance !== null && !verified && (
         <View style={styles.distanceBadge}>
-          <Text style={styles.distanceText}>You are {distance}m away — keep moving!</Text>
+          <Text style={styles.distanceText}>Jestes {distance} m od celu - idz dalej!</Text>
         </View>
       )}
 
       {verified ? (
         <View style={styles.successCard}>
           <Text style={styles.successEmoji}>✅</Text>
-          <Text style={styles.successText}>Location verified!</Text>
+          <Text style={styles.successText}>Lokalizacja potwierdzona!</Text>
         </View>
       ) : (
         <TouchableOpacity style={styles.button} onPress={checkIn} disabled={checking}>
           {checking ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.buttonText}>📡 Check In Here</Text>
+            <Text style={styles.buttonText}>📡 Potwierdz lokalizacje</Text>
           )}
         </TouchableOpacity>
       )}

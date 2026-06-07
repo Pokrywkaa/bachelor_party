@@ -12,7 +12,7 @@ export default function TimedTask({ description, onResult }: Props) {
 
   const confirm = () => {
     setConfirmed(true);
-    onResult({ confirmed: true, answer: 'Completed' });
+    onResult({ confirmed: true, answer: 'Wykonano' });
   };
 
   return (
@@ -20,17 +20,17 @@ export default function TimedTask({ description, onResult }: Props) {
       <View style={styles.infoCard}>
         <Text style={styles.infoEmoji}>⏱️</Text>
         <Text style={styles.infoText}>
-          Complete the task described above, then tap the button below to confirm you did it!
+          Wykonaj zadanie opisane powyzej, a potem kliknij przycisk ponizej, aby potwierdzic.
         </Text>
       </View>
       {confirmed ? (
         <View style={styles.doneCard}>
           <Text style={styles.doneEmoji}>✅</Text>
-          <Text style={styles.doneText}>Marked as done!</Text>
+          <Text style={styles.doneText}>Oznaczono jako wykonane!</Text>
         </View>
       ) : (
         <TouchableOpacity style={styles.button} onPress={confirm}>
-          <Text style={styles.buttonText}>✅ I Did It!</Text>
+          <Text style={styles.buttonText}>✅ Zrobione!</Text>
         </TouchableOpacity>
       )}
     </View>

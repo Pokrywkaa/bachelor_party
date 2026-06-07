@@ -14,38 +14,38 @@ const SLIDES = [
   {
     id: '1',
     emoji: '🎉',
-    title: 'Welcome to the Party!',
-    body: "You're part of Adam's bachelor party. Today you'll go on a mission-driven adventure across the city. Get ready for tasks, challenges, and chaos.",
+    title: 'Witamy na imprezie!',
+    body: 'Jesteś częścią wieczoru kawalerskiego Konrada. Dzisiaj czeka Cię miejska przygoda z misjami. Przygotuj się na zadania.',
   },
   {
     id: '2',
     emoji: '📱',
-    title: 'How Tasks Work',
-    body: "When an admin triggers a task for you, your phone will buzz with a push notification. Open the app and you'll see your mission with all the details.",
+    title: 'Jak działają zadania',
+    body: 'Gdy organizator uruchomi dla Ciebie zadanie, telefon wyśle powiadomienie push. Otwórz aplikację, a zobaczysz swoją misję ze wszystkimi szczegółami.',
   },
   {
     id: '3',
     emoji: '⏱️',
-    title: 'Timers',
-    body: 'Some tasks have a countdown timer. Complete and submit before it runs out for full points. You can still submit late — but you\'ll lose 25% of the points.',
+    title: 'Liczniki czasu',
+    body: 'Niektore zadania maja odliczanie. Wykonaj i wyslij przed uplywem czasu, aby dostac pelne punkty. Mozesz wyslac po czasie, ale tracisz 25% punktow.',
   },
   {
     id: '4',
     emoji: '📸',
-    title: 'Task Types',
-    body: 'Tasks range from taking photos & videos, GPS check-ins, quiz questions, dares, physical challenges, and more. Be creative — judges are watching!',
+    title: 'Typy zadan',
+    body: 'Zadania obejmuja zdjecia i filmy, check-in GPS, quizy, wyzwania i wiele wiecej. Badz kreatywny - sedziowie patrza!',
   },
   {
     id: '5',
     emoji: '🏆',
-    title: 'Leaderboard',
-    body: 'Points are awarded after admin review. Check the live leaderboard to see your rank. Rewards await the bold, punishments await the cowardly.',
+    title: 'Ranking',
+    body: 'Punkty sa przyznawane po ocenie organizatora. Sprawdz ranking na zywo i zobacz swoje miejsce. Na odwaznych czekaja nagrody, na reszte - kary.',
   },
   {
     id: '6',
     emoji: '🚀',
-    title: "You're Ready!",
-    body: "Stay alert, keep your phone close, and have fun. The admin could send you a task at any moment. Good luck!",
+    title: 'Gotowy!',
+    body: 'Badz czujny, trzymaj telefon blisko i baw sie dobrze. Organizator moze wyslac Ci zadanie w kazdej chwili. Powodzenia!',
   },
 ];
 
@@ -80,7 +80,7 @@ export default function OnboardingStandardScreen({ navigation }: Props) {
 
       <TouchableOpacity style={styles.button} onPress={goNext}>
         <Text style={styles.buttonText}>
-          {currentIndex < SLIDES.length - 1 ? 'Next →' : "Let's Go! 🚀"}
+          {currentIndex < SLIDES.length - 1 ? 'Dalej →' : 'Start! 🚀'}
         </Text>
       </TouchableOpacity>
     </View>

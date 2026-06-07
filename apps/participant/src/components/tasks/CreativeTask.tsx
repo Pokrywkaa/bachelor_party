@@ -10,10 +10,10 @@ interface Props {
 }
 
 const TYPE_CONFIG: Record<string, { emoji: string; hint: string; requiresMedia: boolean }> = {
-  creative: { emoji: '🎨', hint: 'Describe your creative response, or add a photo/video.', requiresMedia: false },
-  social: { emoji: '📱', hint: 'Post on social media and attach a screenshot as proof.', requiresMedia: true },
-  memory: { emoji: '🧩', hint: 'Write your answer from memory.', requiresMedia: false },
-  physical: { emoji: '💪', hint: 'Record a video of yourself completing the challenge.', requiresMedia: true },
+  creative: { emoji: '🎨', hint: 'Opisz swoja kreatywna odpowiedz albo dodaj zdjecie/wideo.', requiresMedia: false },
+  social: { emoji: '📱', hint: 'Opublikuj w social media i dolacz zrzut ekranu jako dowod.', requiresMedia: true },
+  memory: { emoji: '🧩', hint: 'Wpisz odpowiedz z pamieci.', requiresMedia: false },
+  physical: { emoji: '💪', hint: 'Nagraj wideo, jak wykonujesz wyzwanie.', requiresMedia: true },
 };
 
 export default function CreativeTask({ type, description, onResult }: Props) {
@@ -59,7 +59,7 @@ export default function CreativeTask({ type, description, onResult }: Props) {
 
       <TextInput
         style={styles.textInput}
-        placeholder={type === 'memory' ? 'Your answer...' : 'Add a note (optional)...'}
+        placeholder={type === 'memory' ? 'Twoja odpowiedz...' : 'Dodaj notatke (opcjonalnie)...'}
         placeholderTextColor="#6b7280"
         value={text}
         onChangeText={handleTextChange}
@@ -73,16 +73,16 @@ export default function CreativeTask({ type, description, onResult }: Props) {
             <Image source={{ uri: mediaUri }} style={styles.preview} />
           ) : (
             <View style={styles.videoPlaceholder}>
-              <Text style={styles.videoPlaceholderText}>🎥 Video attached</Text>
+              <Text style={styles.videoPlaceholderText}>🎥 Wideo dolaczone</Text>
             </View>
           )}
           <TouchableOpacity style={styles.reattachButton} onPress={attachMedia}>
-            <Text style={styles.reattachText}>Change Media</Text>
+            <Text style={styles.reattachText}>Zmien multimedia</Text>
           </TouchableOpacity>
         </View>
       ) : (
         <TouchableOpacity style={[styles.button, styles.buttonSecondary]} onPress={attachMedia}>
-          <Text style={styles.buttonText}>📎 Attach Photo / Video</Text>
+          <Text style={styles.buttonText}>📎 Dolacz zdjecie / wideo</Text>
         </TouchableOpacity>
       )}
     </View>

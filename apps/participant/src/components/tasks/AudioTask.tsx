@@ -24,7 +24,7 @@ export default function AudioTask({ onResult }: Props) {
     try {
       const { granted } = await requestRecordingPermissionsAsync();
       if (!granted) {
-        Alert.alert('Permission required', 'Microphone access is needed.');
+        Alert.alert('Wymagane uprawnienie', 'Potrzebny jest dostep do mikrofonu.');
         return;
       }
       await setAudioModeAsync({ allowsRecording: true, playsInSilentMode: true });
@@ -32,7 +32,7 @@ export default function AudioTask({ onResult }: Props) {
       recorder.record();
       setIsRecording(true);
     } catch (e) {
-      Alert.alert('Error', 'Could not start recording.');
+      Alert.alert('Blad', 'Nie udalo sie rozpoczać nagrywania.');
     }
   };
 
@@ -60,29 +60,29 @@ export default function AudioTask({ onResult }: Props) {
       <View style={styles.visualizer}>
         <Text style={styles.micEmoji}>{isRecording ? '🔴' : uri ? '✅' : '🎙️'}</Text>
         <Text style={styles.status}>
-          {isRecording ? 'Recording...' : uri ? 'Recording ready' : 'Tap to record'}
+          {isRecording ? 'Nagrywanie...' : uri ? 'Nagranie gotowe' : 'Kliknij, aby nagrac'}
         </Text>
       </View>
 
       {!isRecording && !uri && (
         <TouchableOpacity style={styles.button} onPress={startRecording}>
-          <Text style={styles.buttonText}>🎙️ Start Recording</Text>
+          <Text style={styles.buttonText}>🎙️ Rozpocznij nagrywanie</Text>
         </TouchableOpacity>
       )}
 
       {isRecording && (
         <TouchableOpacity style={[styles.button, styles.stopButton]} onPress={stopRecording}>
-          <Text style={styles.buttonText}>⏹️ Stop Recording</Text>
+          <Text style={styles.buttonText}>⏹️ Zatrzymaj nagrywanie</Text>
         </TouchableOpacity>
       )}
 
       {uri && !isRecording && (
         <View style={{ gap: 10 }}>
           <TouchableOpacity style={styles.button} onPress={togglePlayback}>
-            <Text style={styles.buttonText}>{player.playing ? '⏹️ Stop' : '▶️ Play Recording'}</Text>
+            <Text style={styles.buttonText}>{player.playing ? '⏹️ Zatrzymaj' : '▶️ Odtworz nagranie'}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.button, styles.buttonSecondary]} onPress={startRecording}>
-            <Text style={styles.buttonText}>🔄 Record Again</Text>
+            <Text style={styles.buttonText}>🔄 Nagraj ponownie</Text>
           </TouchableOpacity>
         </View>
       )}

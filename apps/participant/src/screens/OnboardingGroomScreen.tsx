@@ -15,38 +15,38 @@ const GROOM_SLIDES = [
   {
     id: '1',
     emoji: '👑',
-    title: 'The Man of the Hour',
-    body: 'Welcome, Adam! Today is YOUR day. We are gathered here to celebrate the last chapter of your single life — and we plan to make it unforgettable.',
+    title: 'Bohater wieczoru',
+    body: 'Witaj, Adam! Dzisiaj jest TWOJ dzien. Jestesmy tu, by uczcic ostatni rozdzial Twojego kawalerskiego zycia i zrobic z tego legende.',
   },
   {
     id: '2',
     emoji: '🤝',
-    title: 'Your Fellow Adventurers',
-    body: 'Today you\'ll be joined by your best mates:\n\nBartek • Damian • Piotr • Łukasz • Marcin • Tomek • Krzysztof\n\nEach of them has prepared something special for you.',
+    title: 'Twoja ekipa',
+    body: 'Dzisiaj sa z Toba najlepsi kumple:\n\nBartek • Damian • Piotr • Lukasz • Marcin • Tomek • Krzysztof\n\nKazdy z nich przygotowal dla Ciebie cos specjalnego.',
   },
   {
     id: '3',
     emoji: '📍',
-    title: 'The Journey Ahead',
-    body: 'The day takes you from the airport → through the city → to the club. At every stop, missions await. Complete them for glory. Fail them for… consequences.',
+    title: 'Plan wyprawy',
+    body: 'Trasa prowadzi z lotniska przez miasto do klubu. Na kazdym przystanku czekaja misje. Wykonasz - chwala. Nie wykonasz - konsekwencje.',
   },
   {
     id: '4',
     emoji: '📱',
-    title: 'Your Mission (Should You Choose to Accept It)',
-    body: 'When a task arrives, your phone will buzz. Open the app, read your mission, and complete it before the timer runs out. Photos, videos, dares — anything goes.',
+    title: 'Twoja misja',
+    body: 'Kiedy przyjdzie zadanie, telefon zawibruje. Otworz aplikacje, przeczytaj misje i wykonaj ja przed koncem czasu. Zdjecia, filmy, wyzwania - wszystko dozwolone.',
   },
   {
     id: '5',
     emoji: '🏆',
-    title: 'Rewards & Punishments',
-    body: 'Complete tasks → earn points and rewards. Fail tasks → suffer punishments. The leaderboard is live and everyone can see it. No pressure. 😈',
+    title: 'Nagrody i kary',
+    body: 'Wykonujesz zadania - zdobywasz punkty i nagrody. Odpuszczasz - wpadaja kary. Ranking jest na zywo i wszyscy go widza. Zero presji. 😈',
   },
   {
     id: '6',
     emoji: '🎊',
-    title: "Let's Go!",
-    body: "Today is going to be legendary. Enjoy every moment. We love you, brother. Now let's make some memories!",
+    title: 'Zaczynamy!',
+    body: 'Ten dzien bedzie legendarny. Ciesz sie kazda chwila. Kochamy Cie, bracie. Robimy wspomnienia!',
   },
 ];
 
@@ -82,7 +82,7 @@ export default function OnboardingGroomScreen({ navigation }: Props) {
 
       <TouchableOpacity style={styles.button} onPress={goNext}>
         <Text style={styles.buttonText}>
-          {currentIndex < GROOM_SLIDES.length - 1 ? 'Next →' : "Let's Go! 🎉"}
+          {currentIndex < GROOM_SLIDES.length - 1 ? 'Dalej →' : 'Zaczynamy! 🎉'}
         </Text>
       </TouchableOpacity>
     </View>

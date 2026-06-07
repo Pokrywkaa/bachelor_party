@@ -24,7 +24,7 @@ export default function NameEntryScreen({ navigation }: Props) {
   const handleJoin = async () => {
     const trimmed = name.trim();
     if (!trimmed) {
-      Alert.alert('Enter your name', 'Please type your name to continue.');
+      Alert.alert('Podaj imie', 'Wpisz swoje imie, aby kontynuowac.');
       return;
     }
 
@@ -43,8 +43,8 @@ export default function NameEntryScreen({ navigation }: Props) {
 
       if (snap.empty) {
         Alert.alert(
-          'Name not found',
-          `"${trimmed}" is not on the guest list. Check your spelling or ask an admin.`
+          'Nie znaleziono imienia',
+          `"${trimmed}" nie jest na liscie gosci. Sprawdz pisownie lub zapytaj organizatora.`
         );
         setLoading(false);
         return;
@@ -62,7 +62,7 @@ export default function NameEntryScreen({ navigation }: Props) {
 
       navigation.replace(participantData.isGroom ? 'OnboardingGroom' : 'OnboardingStandard');
     } catch (error) {
-      Alert.alert('Error', 'Something went wrong. Please try again.');
+      Alert.alert('Blad', 'Cos poszlo nie tak. Sprobuj ponownie.');
       console.error(error);
     } finally {
       setLoading(false);
@@ -77,12 +77,12 @@ export default function NameEntryScreen({ navigation }: Props) {
     >
       <View style={styles.inner}>
         <Text style={styles.emoji}>🎉</Text>
-        <Text style={styles.title}>Bachelor Party</Text>
-        <Text style={styles.subtitle}>Enter your name to join the fun</Text>
+        <Text style={styles.title}>Armagedon</Text>
+        <Text style={styles.subtitle}>Wpisz imię, aby dołączyć do gry</Text>
 
         <TextInput
           style={styles.input}
-          placeholder="Your name..."
+          placeholder="Twoje imię..."
           placeholderTextColor="#6b7280"
           value={name}
           onChangeText={setName}
@@ -99,7 +99,7 @@ export default function NameEntryScreen({ navigation }: Props) {
           {loading ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.buttonText}>Join the Party 🚀</Text>
+            <Text style={styles.buttonText}>Dołącz 🚀</Text>
           )}
         </TouchableOpacity>
       </View>

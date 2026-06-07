@@ -1,6 +1,6 @@
 /**
  * Seed script — run ONCE before the event to populate Firestore with
- * participants, rewards and punishments.
+ * participants, tasks, rewards and punishments.
  *
  * Usage:
  *   node scripts/seed.js
@@ -26,29 +26,85 @@ const EVENT_ID = 'main';
 // ─── Data ─────────────────────────────────────────────────────────────────
 
 const PARTICIPANTS = [
-  { name: 'Adam',     isGroom: true,  role: 'participant', score: 0, pushToken: null },
-  { name: 'Bartek',   isGroom: false, role: 'admin',       score: 0, pushToken: null, pinHash: 'pin:1234' },
+  { name: 'Kondziu',     isGroom: true,  role: 'participant', score: 0, pushToken: null },
   { name: 'Damian',   isGroom: false, role: 'admin',       score: 0, pushToken: null, pinHash: 'pin:5678' },
-  { name: 'Piotr',    isGroom: false, role: 'participant', score: 0, pushToken: null },
-  { name: 'Łukasz',   isGroom: false, role: 'participant', score: 0, pushToken: null },
-  { name: 'Marcin',   isGroom: false, role: 'participant', score: 0, pushToken: null },
-  { name: 'Tomek',    isGroom: false, role: 'participant', score: 0, pushToken: null },
-  { name: 'Krzysztof',isGroom: false, role: 'participant', score: 0, pushToken: null },
+  { name: 'Kociu',   isGroom: false, role: 'participant',       score: 0, pushToken: null},
+  { name: 'Sali',    isGroom: false, role: 'participant', score: 0, pushToken: null },
+  { name: 'Kamzo',   isGroom: false, role: 'participant', score: 0, pushToken: null },
+  { name: 'Mati',   isGroom: false, role: 'participant', score: 0, pushToken: null },
+  { name: 'Hubert',    isGroom: false, role: 'participant', score: 0, pushToken: null },
+  { name: 'Rafał',     isGroom: false, role: 'participant', score: 0, pushToken: null },
+  { name: 'Filip',     isGroom: false, role: 'participant', score: 0, pushToken: null },
 ];
 
 const REWARDS = [
-  { icon: '🍺', title: 'Beer Round',    description: 'The groom buys a round of beers for everyone!' },
-  { icon: '🎤', title: 'Karaoke Song',  description: 'Groom must perform a full karaoke song of your choice.' },
-  { icon: '💪', title: 'Piggyback Ride', description: 'Groom carries you on his back for 50 meters.' },
-  { icon: '🤳', title: 'Embarrassing Photo', description: 'Groom must pose for a ridiculous photo that goes in the group.' },
+  { icon: '🍻', title: 'Kolejka piwa', description: 'Fundujesz kolejkę piwa dla całej ekipy!' },
+  { icon: '🎯', title: 'Mistrz wyzwań', description: 'Wymyślasz zadanie dla wybranej przez Ciebie osoby.' },
+  { icon: '🥂', title: 'Toast mistrza', description: 'Wznosisz toast i wszyscy muszą powtórzyć Twoje słowa.' },
+  { icon: '📢', title: 'Ogłoszenie króla', description: 'Wygłoś krótkie „ważne ogłoszenie” dla wszystkich.' },
+  { icon: '🤝', title: 'Sojusznik', description: 'Wybierasz osobę, która musi Ci pomóc w kolejnym wyzwaniu.' },
+  { icon: '🎁', title: 'Prezent od grupy', description: 'Grupa spełnia Twoje małe życzenie (w granicach rozsądku).' },
+  { icon: '🎲', title: 'Losowanie kary', description: 'Wybierasz osobę, która wykonuje wylosowaną przez grupę karę.' },
 ];
 
 const PUNISHMENTS = [
-  { icon: '🥃', title: 'Shot',          description: 'Take a shot of whatever the group decides.' },
-  { icon: '🎭', title: 'Impression',    description: 'Do a 1-minute impression of your partner.' },
-  { icon: '📞', title: 'Awkward Call',  description: 'Call someone from your contacts and sing Happy Birthday.' },
-  { icon: '🕺', title: 'Solo Dance',    description: 'Dance alone for 30 seconds to a song chosen by the group.' },
-  { icon: '🍋', title: 'Lemon Challenge', description: 'Eat a full lemon slice without making a face.' },
+  { icon: '🥃', title: 'Shot wódki', description: 'Wypij czysty shot wódki (lub innego alkoholu wskazanego przez grupę).' },
+  { icon: '🍺', title: 'Piwo na raz', description: 'Wypij całe piwo na raz.' },
+  { icon: '🗣️', title: 'Wymyślony język', description: 'Podejdź do kogoś i mów przez 1 minutę wymyślonym językiem.' },
+  { icon: '🎭', title: 'Odgrywanie postaci', description: 'Przez nastepne 10 minut udawaj osobe ktore akutalnie siedzi najblizej Ciebie.' },
+  { icon: '📞', title: 'Cringe telefon', description: 'Zadzwoń do kogoś i powiedz coś losowo dziwnego, co wymyśli grupa.' },
+  { icon: '💃', title: 'Solo taniec', description: 'Tańcz solo przez 30 sekund do wybranej przez grupę muzyki.' },
+  { icon: '🧠', title: 'Pytanie prawdy', description: 'Odpowiedz szczerze na bardzo niewygodne pytanie od grupy.' },
+  { icon: '📣', title: 'Krzyk na zewnątrz', description: 'Wyjdź i krzyknij coś losowego na głos.' },
+];
+
+const TASKS = [
+  {
+    title: 'Selfie z nieznajomym',
+    description: 'Zrób selfie z osobą, której nie znacie i wrzuć jako dowód.',
+    type: 'photo',
+    points: 120,
+    durationSeconds: 420,
+    mediaRequired: true,
+    rewardId: null,
+    punishmentId: null,
+  },
+  {
+    title: 'Nagranie okrzyku',
+    description: 'Nagraj 10-sekundowy okrzyk drużyny i wyślij audio.',
+    type: 'audio',
+    points: 100,
+    durationSeconds: 300,
+    mediaRequired: true,
+    rewardId: null,
+    punishmentId: null,
+  },
+  {
+    title: 'Quiz: Urodziny',
+    description: 'Kiedy Konrad obchodzi urodziny?',
+    type: 'quiz',
+    points: 90,
+    durationSeconds: 180,
+    mediaRequired: false,
+    rewardId: null,
+    punishmentId: null,
+    quizOptions: [
+      { id: 'a', text: '4 października', isCorrect: false },
+      { id: 'b', text: '13 października', isCorrect: true },
+      { id: 'c', text: '6 października', isCorrect: false },
+      { id: 'd', text: '21 października', isCorrect: false },
+    ],
+  },
+  {
+    title: 'Odwaga: mini stand-up',
+    description: 'Opowiedz 30-sekundowy żart lub historię przed grupą.',
+    type: 'dare',
+    points: 125,
+    durationSeconds: 300,
+    mediaRequired: false,
+    rewardId: null,
+    punishmentId: null,
+  },
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────
@@ -115,6 +171,19 @@ async function seed() {
     const ref = participantsCol.doc();
     await ref.set({ id: ref.id, ...p, createdAt: admin.firestore.FieldValue.serverTimestamp() });
     console.log(`✅ Participant: ${p.name}`);
+  }
+
+  // Seed tasks
+  const tasksCol = eventRef.collection('tasks');
+  for (const t of TASKS) {
+    const ref = tasksCol.doc();
+    await ref.set({
+      id: ref.id,
+      ...t,
+      createdBy: 'seed-script',
+      createdAt: new Date().toISOString(),
+    });
+    console.log(`✅ Task: ${t.title}`);
   }
 
   // Seed rewards

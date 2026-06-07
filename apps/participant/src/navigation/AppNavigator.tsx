@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -44,17 +44,17 @@ function MainTabs() {
       <Tab.Screen
         name="Home"
         component={HomeScreen}
-        options={{ tabBarLabel: 'Home', tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>🏠</Text> }}
+        options={{ tabBarLabel: 'Start', tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>🏠</Text> }}
       />
       <Tab.Screen
         name="Leaderboard"
         component={LeaderboardScreen}
-        options={{ tabBarLabel: 'Rankings', tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>🏆</Text> }}
+        options={{ tabBarLabel: 'Ranking', tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>🏆</Text> }}
       />
       <Tab.Screen
         name="History"
         component={HistoryScreen}
-        options={{ tabBarLabel: 'History', tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>📋</Text> }}
+        options={{ tabBarLabel: 'Historia', tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>📋</Text> }}
       />
     </Tab.Navigator>
   );
