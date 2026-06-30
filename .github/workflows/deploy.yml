@@ -33,11 +33,17 @@ jobs:
 
       - name: Build and export web apps
         run: |
-          mkdir -p gh-pages/admin gh-pages/participant
-          cd apps/admin  && pnpm exec expo export --platform web --output-dir ../../gh-pages/admin
-          cd apps/participant && pnpm exec expo export --platform web --output-dir ../../gh-pages/participant
-          echo "=== admin ===" && find gh-pages/admin -name "index.html"
-          echo "=== participant ===" && find gh-pages/participant -name "index.html"
+          ROOT=$PWD
+          mkdir -p "$ROOT/gh-pages/admin" "$ROOT/gh-pages/participant"
+
+          cd "$ROOT/apps/admin"
+          pnpm exec expo export --platform web --output-dir "$ROOT/gh-pages/admin"
+
+          cd "$ROOT/apps/participant"
+          pnpm exec expo export --platform web --output-dir "$ROOT/gh-pages/participant"
+
+          echo "=== admin ===" && find "$ROOT/gh-pages/admin" -name "index.html"
+          echo "=== participant ===" && find "$ROOT/gh-pages/participant" -name "index.html"
 
       - name: Create root index page
         run: |
