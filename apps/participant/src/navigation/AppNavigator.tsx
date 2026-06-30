@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text } from 'react-native';
+import { Text, ActivityIndicator, View } from 'react-native';
+import { onAuthStateChanged, signInAnonymously } from 'firebase/auth';
+import { auth } from '@bachelor-party/shared';
 import { useParticipantStore } from '../store/participantStore';
 
 // Screens
@@ -62,6 +64,38 @@ function MainTabs() {
 
 export default function Navigation() {
   const { currentParticipant, hasCompletedOnboarding } = useParticipantStore();
+  const [isHydrated, setIsHydrated] = useState(false);
+  const [authReady, setAuthReady] = useState(false);
+
+  // Safely listen to hydration events
+  useEffect(() => {
+    // Check if store is already hydrated on mount
+    if (useParticipantStore.persist.hasHydrated()) {
+      setIsHydrated(true);
+    } else {
+      // If not hydrated yet, subscribe to the finish hydration event
+      const unsub = useParticipantStore.persist.onFinishHydrate(() => {
+        setIsHydrated(true);
+      });
+      return () => unsub();
+    }
+  }, []);
+
+  // Wait for Firebase auth to initialise, auto re-sign-in if session was lost
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (!user && currentParticipant) {
+        // Auth session lost (e.g. web page reload before persistence fix) — re-authenticate
+        try {
+          await signInAnonymously(auth);
+        } catch (e) {
+          console.warn('Auto sign-in failed:', e);
+        }
+      }
+      setAuthReady(true);
+    });
+    return () => unsub();
+  }, [currentParticipant]);
 
   const getInitialRoute = (): keyof RootStackParamList => {
     if (!currentParticipant) return 'Armagedon';
@@ -70,6 +104,15 @@ export default function Navigation() {
     }
     return 'Main';
   };
+
+  // Render loading state while reading storage to prevent flashing wrong screens
+  if (!isHydrated || !authReady) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#1a0a2e' }}>
+        <ActivityIndicator size="large" color="#a78bfa" />
+      </View>
+    );
+  }
 
   return (
     <NavigationContainer>
@@ -90,4 +133,3 @@ export default function Navigation() {
     </NavigationContainer>
   );
 }
-

@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView, Platform,
+  View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView, Platform, ActivityIndicator
 } from 'react-native';
 import {
   collection, query, where, onSnapshot, orderBy,
 } from 'firebase/firestore';
-import { db, EVENT_ID, getInitials, taskTypeLabel } from '@bachelor-party/shared';
+import { onAuthStateChanged } from 'firebase/auth'; // Import this to track auth changes reactively
+import { db, EVENT_ID, getInitials, taskTypeLabel, auth } from '@bachelor-party/shared';
 import { useParticipantStore } from '../store/participantStore';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/AppNavigator';
@@ -26,6 +27,22 @@ export default function HomeScreen({ navigation }: Props) {
     submissions, setSubmissions,
   } = useParticipantStore();
 
+  const [loadingData, setLoadingData] = useState(true);
+  const [authReady, setAuthReady] = useState(false);
+  const [firebaseUser, setFirebaseUser] = useState<any>(null);
+
+  // ── 1. Reactive Auth State Listener ────────────────────────────────────────
+  useEffect(() => {
+    // onAuthStateChanged fires once on mount with the persisted session (or null).
+    // Only after this first callback do we know whether auth is ready.
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      setFirebaseUser(user);
+      setAuthReady(true);
+    });
+
+    return () => unsubscribeAuth();
+  }, []);
+
   // ── Web browser notifications for new assignments ────────────────────────
 
   const seenAssignmentIds = useRef<Set<string>>(new Set());
@@ -36,7 +53,6 @@ export default function HomeScreen({ navigation }: Props) {
     if (typeof Notification === 'undefined') return;
 
     if (!notificationsInitialized.current) {
-      // First snapshot: mark all existing assignments as seen without notifying
       assignments.forEach((a) => seenAssignmentIds.current.add(a.id));
       notificationsInitialized.current = true;
       return;
@@ -68,10 +84,33 @@ export default function HomeScreen({ navigation }: Props) {
     fire();
   }, [assignments, tasks]);
 
-  // ── Real-time listeners ────────────────────────────────────────────────────
+  // ── 2. Real-time Firestore listeners ────────────────────────────────────────
 
   useEffect(() => {
-    if (!currentParticipant) return;
+    // Wait for onAuthStateChanged to fire at least once before acting
+    if (!authReady) return;
+
+    // No authenticated session — nothing to load
+    if (!firebaseUser) {
+      setLoadingData(false);
+      return;
+    }
+
+    // Participant not yet in store
+    if (!currentParticipant?.id) {
+      setLoadingData(false);
+      return;
+    }
+
+    setLoadingData(true);
+
+    let assignmentsLoaded = false;
+    let fallbackTimeout: NodeJS.Timeout;
+
+    // Safety fallback: if rules temporarily block or network lags, don't freeze the app
+    fallbackTimeout = setTimeout(() => {
+      setLoadingData(false);
+    }, 3000);
 
     const unsubAssignments = onSnapshot(
       query(
@@ -79,27 +118,42 @@ export default function HomeScreen({ navigation }: Props) {
         where('participantId', '==', currentParticipant.id),
         orderBy('triggeredAt', 'desc')
       ),
-      (snap) => setAssignments(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as any))
+      (snap) => {
+        setAssignments(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as any));
+        assignmentsLoaded = true;
+        setLoadingData(false);
+        clearTimeout(fallbackTimeout);
+      },
+      (error) => {
+        console.warn("Assignments stream error:", error.message);
+        if (!assignmentsLoaded) {
+          setTimeout(() => setLoadingData(false), 1000);
+        }
+      }
     );
 
     const unsubTasks = onSnapshot(
       collection(db, 'events', EVENT_ID, 'tasks'),
-      (snap) => setTasks(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as any))
+      (snap) => setTasks(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as any)),
+      (error) => console.warn("Tasks stream warning:", error.message)
     );
 
     const unsubParticipants = onSnapshot(
       query(collection(db, 'events', EVENT_ID, 'participants'), orderBy('score', 'desc')),
-      (snap) => setParticipants(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as any))
+      (snap) => setParticipants(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as any)),
+      (error) => console.warn("Participants stream warning:", error.message)
     );
 
     const unsubRewards = onSnapshot(
       collection(db, 'events', EVENT_ID, 'rewards'),
-      (snap) => setRewards(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as any))
+      (snap) => setRewards(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as any)),
+      (error) => console.warn("Rewards stream warning:", error.message)
     );
 
     const unsubPunishments = onSnapshot(
       collection(db, 'events', EVENT_ID, 'punishments'),
-      (snap) => setPunishments(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as any))
+      (snap) => setPunishments(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as any)),
+      (error) => console.warn("Punishments stream warning:", error.message)
     );
 
     const unsubSubmissions = onSnapshot(
@@ -108,10 +162,12 @@ export default function HomeScreen({ navigation }: Props) {
         where('participantId', '==', currentParticipant.id),
         orderBy('submittedAt', 'desc')
       ),
-      (snap) => setSubmissions(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as any))
+      (snap) => setSubmissions(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as any)),
+      (error) => console.warn("Submissions stream warning:", error.message)
     );
 
     return () => {
+      clearTimeout(fallbackTimeout);
       unsubAssignments();
       unsubTasks();
       unsubParticipants();
@@ -119,7 +175,8 @@ export default function HomeScreen({ navigation }: Props) {
       unsubPunishments();
       unsubSubmissions();
     };
-  }, [currentParticipant]);
+    // Component dependency watches the state version of the auth session
+  }, [currentParticipant?.id, authReady, firebaseUser]);
 
   // ── Derived state ──────────────────────────────────────────────────────────
 
@@ -149,12 +206,23 @@ export default function HomeScreen({ navigation }: Props) {
     return () => clearInterval(interval);
   }, [pendingAssignment?.expiresAt]);
 
+  if (loadingData) {
+    return (
+      <SafeAreaView style={[styles.safeArea, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#a78bfa" />
+        <Text style={{ color: '#a78bfa', fontSize: 15, marginTop: 12, fontWeight: '500' }}>
+          Synchronizowanie danych misji...
+        </Text>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
         {/* Header */}
         <View style={styles.header}>
-          <View>
+          <View style={{ flex: 1, paddingRight: 8 }}>
             <Text style={styles.greeting}>Cześć, {currentParticipant?.name} {currentParticipant?.isGroom ? '👑' : '👋'}</Text>
             <Text style={styles.subGreeting}>Bądź czujny - nowa misja może wpaść w każdej chwili!</Text>
           </View>
@@ -311,4 +379,3 @@ const styles = StyleSheet.create({
   },
   introButtonText: { color: '#a78bfa', fontSize: 15 },
 });
-

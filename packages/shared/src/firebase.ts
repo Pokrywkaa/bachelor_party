@@ -1,7 +1,7 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
-import { initializeAuth, getAuth } from 'firebase/auth';
+import { initializeAuth, getAuth, browserLocalPersistence } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCBSRKMDTRtpKgYBmKD04-oIzk4kk9wKZw",
@@ -25,7 +25,7 @@ function createAuth() {
   // getReactNativePersistence only exists in the Metro/RN bundle, not the web bundle.
   const isNative = typeof navigator !== 'undefined' && navigator.product === 'ReactNative';
   if (!isNative) {
-    return initializeAuth(app);
+    return initializeAuth(app, { persistence: browserLocalPersistence });
   }
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const { getReactNativePersistence } = require('firebase/auth');

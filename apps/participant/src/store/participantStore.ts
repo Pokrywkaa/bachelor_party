@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { Participant, Assignment, Submission, Reward, Punishment, Task } from '@bachelor-party/shared';
 
 interface ParticipantStore {
@@ -34,31 +36,44 @@ interface ParticipantStore {
   setHasCompletedOnboarding: (v: boolean) => void;
 }
 
-export const useParticipantStore = create<ParticipantStore>((set) => ({
-  currentParticipant: null,
-  setCurrentParticipant: (p) => set({ currentParticipant: p }),
+export const useParticipantStore = create<ParticipantStore>()(
+  persist(
+    (set) => ({
+      currentParticipant: null,
+      setCurrentParticipant: (p) => set({ currentParticipant: p }),
 
-  activeAssignment: null,
-  setActiveAssignment: (a) => set({ activeAssignment: a }),
+      activeAssignment: null,
+      setActiveAssignment: (a) => set({ activeAssignment: a }),
 
-  tasks: [],
-  setTasks: (tasks) => set({ tasks }),
+      tasks: [],
+      setTasks: (tasks) => set({ tasks }),
 
-  assignments: [],
-  setAssignments: (assignments) => set({ assignments }),
+      assignments: [],
+      setAssignments: (assignments) => set({ assignments }),
 
-  submissions: [],
-  setSubmissions: (submissions) => set({ submissions }),
+      submissions: [],
+      setSubmissions: (submissions) => set({ submissions }),
 
-  participants: [],
-  setParticipants: (participants) => set({ participants }),
+      participants: [],
+      setParticipants: (participants) => set({ participants }),
 
-  rewards: [],
-  setRewards: (rewards) => set({ rewards }),
+      rewards: [],
+      setRewards: (rewards) => set({ rewards }),
 
-  punishments: [],
-  setPunishments: (punishments) => set({ punishments }),
+      punishments: [],
+      setPunishments: (punishments) => set({ punishments }),
 
-  hasCompletedOnboarding: false,
-  setHasCompletedOnboarding: (v) => set({ hasCompletedOnboarding: v }),
-}));
+      hasCompletedOnboarding: false,
+      setHasCompletedOnboarding: (v) => set({ hasCompletedOnboarding: v }),
+    }),
+    {
+      name: 'participant-storage', // Unique name for AsyncStorage key
+      storage: createJSONStorage(() => AsyncStorage),
+      // CRITICAL: Filter out everything except auth and onboarding states
+      partialize: (state) => ({
+        currentParticipant: state.currentParticipant,
+        hasCompletedOnboarding: state.hasCompletedOnboarding,
+      }),
+    }
+  )
+);
