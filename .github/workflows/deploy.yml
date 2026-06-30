@@ -31,19 +31,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build admin web app
-        working-directory: apps/admin
-        run: pnpm run build:web
-
-      - name: Build participant web app
-        working-directory: apps/participant
-        run: pnpm run build:web
-
-      - name: Assemble deployment directory
+      - name: Build and export web apps
         run: |
           mkdir -p gh-pages/admin gh-pages/participant
-          cp -r apps/admin/dist/. gh-pages/admin/
-          cp -r apps/participant/dist/. gh-pages/participant/
+          cd apps/admin  && pnpm exec expo export --platform web --output-dir ../../gh-pages/admin
+          cd apps/participant && pnpm exec expo export --platform web --output-dir ../../gh-pages/participant
+          echo "=== admin ===" && find gh-pages/admin -name "index.html"
+          echo "=== participant ===" && find gh-pages/participant -name "index.html"
 
       - name: Create root index page
         run: |
