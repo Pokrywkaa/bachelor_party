@@ -29,6 +29,14 @@
       "expo-av",
       "expo-video"
     ],
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/icon.png"
+    },
+    "experiments": {
+      "baseUrl": "/bachelor_party/admin"
+    },
     "extra": {
       "eas": {
         "projectId": "REPLACE_WITH_EAS_PROJECT_ID"

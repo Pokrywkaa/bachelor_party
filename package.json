@@ -6,7 +6,9 @@
     "participant": "pnpm --filter participant start",
     "admin": "pnpm --filter admin start",
     "build:participant:android": "pnpm --filter participant run build:android",
-    "build:admin:android": "pnpm --filter admin run build:android"
+    "build:admin:android": "pnpm --filter admin run build:android",
+    "build:admin:web": "pnpm --filter admin run build:web",
+    "build:participant:web": "pnpm --filter participant run build:web"
   },
   "devDependencies": {
     "typescript": "~5.3.3"

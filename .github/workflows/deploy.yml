@@ -1,0 +1,98 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build admin web app
+        working-directory: apps/admin
+        run: pnpm run build:web
+
+      - name: Build participant web app
+        working-directory: apps/participant
+        run: pnpm run build:web
+
+      - name: Assemble deployment directory
+        run: |
+          mkdir -p gh-pages/admin gh-pages/participant
+          cp -r apps/admin/dist/. gh-pages/admin/
+          cp -r apps/participant/dist/. gh-pages/participant/
+
+      - name: Create root index page
+        run: |
+          cat > gh-pages/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Bachelor Party Apps</title>
+            <style>
+              body {
+                font-family: sans-serif;
+                background: #0f172a;
+                color: #f8fafc;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                margin: 0;
+                gap: 2rem;
+              }
+              h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+              a {
+                display: inline-block;
+                padding: 1rem 2.5rem;
+                border-radius: 0.75rem;
+                text-decoration: none;
+                font-size: 1.25rem;
+                font-weight: 600;
+                transition: opacity 0.2s;
+              }
+              a:hover { opacity: 0.85; }
+              .admin { background: #7c3aed; color: #fff; }
+              .participant { background: #0ea5e9; color: #fff; }
+            </style>
+          </head>
+          <body>
+            <h1>🎉 Bachelor Party</h1>
+            <a class="admin" href="./admin/">Admin Panel</a>
+            <a class="participant" href="./participant/">Participant App</a>
+          </body>
+          </html>
+          EOF
+
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: gh-pages
+          force_orphan: true
