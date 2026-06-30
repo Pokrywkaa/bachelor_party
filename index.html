@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bachelor Party Apps</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      gap: 2rem;
+    }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    a {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      border-radius: 0.75rem;
+      text-decoration: none;
+      font-size: 1.25rem;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+    a:hover { opacity: 0.85; }
+    .admin { background: #7c3aed; color: #fff; }
+    .participant { background: #0ea5e9; color: #fff; }
+  </style>
+</head>
+<body>
+  <h1>🎉 Bachelor Party</h1>
+  <a class="admin" href="./admin/">Admin Panel</a>
+  <a class="participant" href="./participant/">Participant App</a>
+</body>
+</html>
