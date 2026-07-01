@@ -15,38 +15,44 @@ const GROOM_SLIDES = [
   {
     id: '1',
     emoji: '👑',
-    title: 'Bohater wieczoru',
-    body: 'Witaj, Adam! Dzisiaj jest TWOJ dzien. Jestesmy tu, by uczcic ostatni rozdzial Twojego kawalerskiego zycia i zrobic z tego legende.',
+    title: 'Siema Pecie, witamy na Kawalerskim!',
+    body: 'Albo wszyscy albo razem',
   },
   {
     id: '2',
     emoji: '🤝',
-    title: 'Twoja ekipa',
-    body: 'Dzisiaj sa z Toba najlepsi kumple:\n\nBartek • Damian • Piotr • Lukasz • Marcin • Tomek • Krzysztof\n\nKazdy z nich przygotowal dla Ciebie cos specjalnego.',
+    title: 'Ale żeście ekipe zmontowali',
+    body: 'Przez weekend będą towarzyszyć Ci: \n Kociu • Damian • Sali • Szwagier • Tomek • Rąpała • Kamzo • Felo • Chubert',
   },
   {
     id: '3',
     emoji: '📍',
-    title: 'Plan wyprawy',
-    body: 'Trasa prowadzi z lotniska przez miasto do klubu. Na kazdym przystanku czekaja misje. Wykonasz - chwala. Nie wykonasz - konsekwencje.',
+    title: 'Miejsce',
+    body: 'Cel wycieczki już znasz bo pewien gagatek sie już wysprzęglił, więc nie jest to tajemnicą, że jest to MALTA',
   },
   {
     id: '4',
     emoji: '📱',
-    title: 'Twoja misja',
-    body: 'Kiedy przyjdzie zadanie, telefon zawibruje. Otworz aplikacje, przeczytaj misje i wykonaj ja przed koncem czasu. Zdjecia, filmy, wyzwania - wszystko dozwolone.',
+    title: 'Aplikacja',
+    body: 'Apka została stworzona na potrzebe Twojego kawalerskiego. Gdy telefon zawibruje lub poinformujemy Cię o sprawdzenie go, otrzymasz zadania do wykonania.',
   },
   {
     id: '5',
-    emoji: '🏆',
-    title: 'Nagrody i kary',
-    body: 'Wykonujesz zadania - zdobywasz punkty i nagrody. Odpuszczasz - wpadaja kary. Ranking jest na zywo i wszyscy go widza. Zero presji. 😈',
+    emoji: '📱',
+    title: 'Zadania',
+    body: 'Do wykonania będziesz miał zadania przez nas stworzone. Dwóch z organizatorów ma dostęp do panelu admina gdzie mogą wysyłać Ci zadania w dowolnym momencie. Istnieją różne typy zadań np. zrobienie zdjęcia, nagranie audio itd, niektóre z nich mogą mieć ograniczenie czasowe ;)',
   },
   {
     id: '6',
+    emoji: '🏆',
+    title: 'Nagrody i kary',
+    body: 'Każde wysłane zadanie będzie weryfikowane przez wykwalifikowanych ekspertów, a następnie otrzymasz potencjalną nagrode lub kare.',
+  },
+  {
+    id: '7',
     emoji: '🎊',
-    title: 'Zaczynamy!',
-    body: 'Ten dzien bedzie legendarny. Ciesz sie kazda chwila. Kochamy Cie, bracie. Robimy wspomnienia!',
+    title: 'Powodzenia byczku',
+    body: '',
   },
 ];
 
@@ -82,7 +88,7 @@ export default function OnboardingGroomScreen({ navigation }: Props) {
 
       <TouchableOpacity style={styles.button} onPress={goNext}>
         <Text style={styles.buttonText}>
-          {currentIndex < GROOM_SLIDES.length - 1 ? 'Dalej →' : 'Zaczynamy! 🎉'}
+          {currentIndex < GROOM_SLIDES.length - 1 ? 'Dalej →' : 'SIUUUUUUUUU! 🎉'}
         </Text>
       </TouchableOpacity>
     </View>

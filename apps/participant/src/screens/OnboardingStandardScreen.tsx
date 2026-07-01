@@ -14,39 +14,9 @@ const SLIDES = [
   {
     id: '1',
     emoji: '🎉',
-    title: 'Witamy na imprezie!',
-    body: 'Jesteś częścią wieczoru kawalerskiego Konrada. Dzisiaj czeka Cię miejska przygoda z misjami. Przygotuj się na zadania.',
-  },
-  {
-    id: '2',
-    emoji: '📱',
-    title: 'Jak działają zadania',
-    body: 'Gdy organizator uruchomi dla Ciebie zadanie, telefon wyśle powiadomienie push. Otwórz aplikację, a zobaczysz swoją misję ze wszystkimi szczegółami.',
-  },
-  {
-    id: '3',
-    emoji: '⏱️',
-    title: 'Liczniki czasu',
-    body: 'Niektore zadania maja odliczanie. Wykonaj i wyslij przed uplywem czasu, aby dostac pelne punkty. Mozesz wyslac po czasie, ale tracisz 25% punktow.',
-  },
-  {
-    id: '4',
-    emoji: '📸',
-    title: 'Typy zadan',
-    body: 'Zadania obejmuja zdjecia i filmy, check-in GPS, quizy, wyzwania i wiele wiecej. Badz kreatywny - sedziowie patrza!',
-  },
-  {
-    id: '5',
-    emoji: '🏆',
-    title: 'Ranking',
-    body: 'Punkty sa przyznawane po ocenie organizatora. Sprawdz ranking na zywo i zobacz swoje miejsce. Na odwaznych czekaja nagrody, na reszte - kary.',
-  },
-  {
-    id: '6',
-    emoji: '🚀',
-    title: 'Gotowy!',
-    body: 'Badz czujny, trzymaj telefon blisko i baw sie dobrze. Organizator moze wyslac Ci zadanie w kazdej chwili. Powodzenia!',
-  },
+    title: 'Witamy!',
+    body: 'Jesteś częścią wieczoru kawalerskiego Konrada, ale to nie Twój kawalerski, więc nie masz takiego ładnego opisu. Powodzenia.',
+  }
 ];
 
 export default function OnboardingStandardScreen({ navigation }: Props) {

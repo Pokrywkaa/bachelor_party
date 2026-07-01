@@ -74,7 +74,7 @@ export default function HomeScreen({ navigation }: Props) {
 
       for (const assignment of newPending) {
         const task = tasks.find((t) => t.id === assignment.taskId);
-        new Notification('🚨 Nowa misja!', {
+        new Notification('🚨 Nowe zadanie!', {
           body: task?.title ?? 'Czeka na Ciebie nowe zadanie!',
           icon: '/icon.png',
         });
@@ -211,7 +211,7 @@ export default function HomeScreen({ navigation }: Props) {
       <SafeAreaView style={[styles.safeArea, { justifyContent: 'center', alignItems: 'center' }]}>
         <ActivityIndicator size="large" color="#a78bfa" />
         <Text style={{ color: '#a78bfa', fontSize: 15, marginTop: 12, fontWeight: '500' }}>
-          Synchronizowanie danych misji...
+          Synchronizowanie danych zadań...
         </Text>
       </SafeAreaView>
     );
@@ -224,7 +224,7 @@ export default function HomeScreen({ navigation }: Props) {
         <View style={styles.header}>
           <View style={{ flex: 1, paddingRight: 8 }}>
             <Text style={styles.greeting}>Cześć, {currentParticipant?.name} {currentParticipant?.isGroom ? '👑' : '👋'}</Text>
-            <Text style={styles.subGreeting}>Bądź czujny - nowa misja może wpaść w każdej chwili!</Text>
+            <Text style={styles.subGreeting}>Bądź czujny - nowe zadanie może wpaść w każdej chwili!</Text>
           </View>
           <View style={styles.scoreBadge}>
             <Text style={styles.scoreLabel}>MIEJSCE</Text>
@@ -245,7 +245,7 @@ export default function HomeScreen({ navigation }: Props) {
             onPress={() => navigation.navigate('Task', { assignmentId: pendingAssignment.id })}
           >
             <View style={styles.taskCardHeader}>
-              <Text style={styles.taskCardBadge}>🎯 AKTYWNA MISJA</Text>
+              <Text style={styles.taskCardBadge}>🎯 AKTYWNE ZADANIE</Text>
               {expiresAtSeconds !== null && (
                 <CountdownRing totalSeconds={activeTask.durationSeconds ?? 0} remainingSeconds={expiresAtSeconds} />
               )}
@@ -261,8 +261,8 @@ export default function HomeScreen({ navigation }: Props) {
         ) : (
           <View style={styles.noTaskCard}>
             <Text style={styles.noTaskEmoji}>😴</Text>
-            <Text style={styles.noTaskText}>Brak aktywnej misji</Text>
-            <Text style={styles.noTaskSub}>Organizator wkrótce wyśle kolejną...</Text>
+            <Text style={styles.noTaskText}>Brak aktywnych zadań</Text>
+            <Text style={styles.noTaskSub}>Organizator wkrótce wyśle kolejne...</Text>
           </View>
         )}
 
