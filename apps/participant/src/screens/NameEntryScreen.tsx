@@ -19,7 +19,7 @@ type Props = {
 export default function NameEntryScreen({ navigation }: Props) {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
-  const { setCurrentParticipant } = useParticipantStore();
+  const { setCurrentParticipant, hasCompletedOnboarding } = useParticipantStore();
 
   const handleJoin = async () => {
     const trimmed = name.trim();
@@ -60,7 +60,11 @@ export default function NameEntryScreen({ navigation }: Props) {
 
       setCurrentParticipant(participantData);
 
-      navigation.replace(participantData.isGroom ? 'OnboardingGroom' : 'OnboardingStandard');
+      if (hasCompletedOnboarding) {
+        navigation.replace('Main');
+      } else {
+        navigation.replace(participantData.isGroom ? 'OnboardingGroom' : 'OnboardingStandard');
+      }
     } catch (error) {
       Alert.alert('Blad', 'Cos poszlo nie tak. Sprobuj ponownie.');
       console.error(error);

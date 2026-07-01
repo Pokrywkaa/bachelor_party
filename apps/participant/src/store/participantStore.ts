@@ -7,6 +7,8 @@ interface ParticipantStore {
   // Auth
   currentParticipant: Participant | null;
   setCurrentParticipant: (p: Participant | null) => void;
+  isLoggingOut: boolean;
+  logout: () => void;
 
   // Active task
   activeAssignment: Assignment | null;
@@ -41,6 +43,18 @@ export const useParticipantStore = create<ParticipantStore>()(
     (set) => ({
       currentParticipant: null,
       setCurrentParticipant: (p) => set({ currentParticipant: p }),
+      isLoggingOut: false,
+      logout: () => set({
+        isLoggingOut: true,
+        currentParticipant: null,
+        activeAssignment: null,
+        tasks: [],
+        assignments: [],
+        submissions: [],
+        participants: [],
+        rewards: [],
+        punishments: [],
+      }),
 
       activeAssignment: null,
       setActiveAssignment: (a) => set({ activeAssignment: a }),

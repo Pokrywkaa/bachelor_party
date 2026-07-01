@@ -5,7 +5,7 @@ import {
 import {
   collection, query, where, onSnapshot, orderBy,
 } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth'; // Import this to track auth changes reactively
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { db, EVENT_ID, taskTypeLabel, auth } from '@bachelor-party/shared';
 import { useParticipantStore } from '../store/participantStore';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -24,6 +24,7 @@ export default function HomeScreen({ navigation }: Props) {
     rewards, setRewards,
     punishments, setPunishments,
     submissions, setSubmissions,
+    logout,
   } = useParticipantStore();
 
   const [loadingData, setLoadingData] = useState(true);
@@ -41,6 +42,14 @@ export default function HomeScreen({ navigation }: Props) {
 
     return () => unsubscribeAuth();
   }, []);
+
+  const handleLogout = async () => {
+    logout();
+    try {
+      await signOut(auth);
+    } catch (_) {}
+    navigation.replace('Armagedon');
+  };
 
   // ── Web browser notifications for new assignments ────────────────────────
 
@@ -282,6 +291,11 @@ export default function HomeScreen({ navigation }: Props) {
         >
           <Text style={styles.introButtonText}>📖 Obejrzyj intro ponownie</Text>
         </TouchableOpacity>
+
+        {/* Logout */}
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Text style={styles.logoutButtonText}>🚪 Wyloguj</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -340,4 +354,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   introButtonText: { color: '#a78bfa', fontSize: 15 },
+  logoutButton: {
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: '#7f1d1d',
+    borderRadius: 12,
+    padding: 14,
+    alignItems: 'center',
+  },
+  logoutButtonText: { color: '#f87171', fontSize: 15 },
 });

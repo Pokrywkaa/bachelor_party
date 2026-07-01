@@ -56,7 +56,7 @@ function MainTabs() {
 }
 
 export default function Navigation() {
-  const { currentParticipant, hasCompletedOnboarding } = useParticipantStore();
+  const { currentParticipant, hasCompletedOnboarding, isLoggingOut } = useParticipantStore();
   const [isHydrated, setIsHydrated] = useState(false);
   const [authReady, setAuthReady] = useState(false);
 
@@ -77,8 +77,8 @@ export default function Navigation() {
   // Wait for Firebase auth to initialise, auto re-sign-in if session was lost
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
-      if (!user && currentParticipant) {
-        // Auth session lost (e.g. web page reload before persistence fix) — re-authenticate
+      if (!user && currentParticipant && !isLoggingOut) {
+        // Auth session lost (e.g. web page reload) — re-authenticate silently
         try {
           await signInAnonymously(auth);
         } catch (e) {
