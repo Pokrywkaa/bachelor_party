@@ -6,7 +6,7 @@ import {
   collection, query, where, onSnapshot, orderBy,
 } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth'; // Import this to track auth changes reactively
-import { db, EVENT_ID, getInitials, taskTypeLabel, auth } from '@bachelor-party/shared';
+import { db, EVENT_ID, taskTypeLabel, auth } from '@bachelor-party/shared';
 import { useParticipantStore } from '../store/participantStore';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/AppNavigator';
@@ -21,7 +21,6 @@ export default function HomeScreen({ navigation }: Props) {
     currentParticipant,
     assignments, setAssignments,
     tasks, setTasks,
-    participants, setParticipants,
     rewards, setRewards,
     punishments, setPunishments,
     submissions, setSubmissions,
@@ -74,7 +73,7 @@ export default function HomeScreen({ navigation }: Props) {
 
       for (const assignment of newPending) {
         const task = tasks.find((t) => t.id === assignment.taskId);
-        new Notification('🚨 Nowe zadanie!', {
+        new Notification('🚨 Nowa misja!', {
           body: task?.title ?? 'Czeka na Ciebie nowe zadanie!',
           icon: '/icon.png',
         });
@@ -138,12 +137,6 @@ export default function HomeScreen({ navigation }: Props) {
       (error) => console.warn("Tasks stream warning:", error.message)
     );
 
-    const unsubParticipants = onSnapshot(
-      query(collection(db, 'events', EVENT_ID, 'participants'), orderBy('score', 'desc')),
-      (snap) => setParticipants(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as any)),
-      (error) => console.warn("Participants stream warning:", error.message)
-    );
-
     const unsubRewards = onSnapshot(
       collection(db, 'events', EVENT_ID, 'rewards'),
       (snap) => setRewards(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as any)),
@@ -170,7 +163,6 @@ export default function HomeScreen({ navigation }: Props) {
       clearTimeout(fallbackTimeout);
       unsubAssignments();
       unsubTasks();
-      unsubParticipants();
       unsubRewards();
       unsubPunishments();
       unsubSubmissions();
@@ -184,8 +176,6 @@ export default function HomeScreen({ navigation }: Props) {
   const activeTask = pendingAssignment
     ? tasks.find((t) => t.id === pendingAssignment.taskId)
     : null;
-
-  const myRank = participants.findIndex((p) => p.id === currentParticipant?.id) + 1;
 
   // ── Live countdown ────────────────────────────────────────────────────────
   const calcRemaining = () =>
@@ -211,7 +201,7 @@ export default function HomeScreen({ navigation }: Props) {
       <SafeAreaView style={[styles.safeArea, { justifyContent: 'center', alignItems: 'center' }]}>
         <ActivityIndicator size="large" color="#a78bfa" />
         <Text style={{ color: '#a78bfa', fontSize: 15, marginTop: 12, fontWeight: '500' }}>
-          Synchronizowanie danych zadań...
+          Synchronizowanie danych misji...
         </Text>
       </SafeAreaView>
     );
@@ -222,20 +212,10 @@ export default function HomeScreen({ navigation }: Props) {
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
         {/* Header */}
         <View style={styles.header}>
-          <View style={{ flex: 1, paddingRight: 8 }}>
+          <View style={{ flex: 1 }}>
             <Text style={styles.greeting}>Cześć, {currentParticipant?.name} {currentParticipant?.isGroom ? '👑' : '👋'}</Text>
-            <Text style={styles.subGreeting}>Bądź czujny - nowe zadanie może wpaść w każdej chwili!</Text>
+            <Text style={styles.subGreeting}>Bądź czujny - nowe zadanie może wpaść w każdej chwili 😉</Text>
           </View>
-          <View style={styles.scoreBadge}>
-            <Text style={styles.scoreLabel}>MIEJSCE</Text>
-            <Text style={styles.scoreValue}>#{myRank || '—'}</Text>
-          </View>
-        </View>
-
-        {/* Score card */}
-        <View style={styles.scoreCard}>
-          <Text style={styles.scoreCardLabel}>Twój wynik</Text>
-          <Text style={styles.scoreCardValue}>{currentParticipant?.score ?? 0} pkt</Text>
         </View>
 
         {/* Active task */}
@@ -245,7 +225,7 @@ export default function HomeScreen({ navigation }: Props) {
             onPress={() => navigation.navigate('Task', { assignmentId: pendingAssignment.id })}
           >
             <View style={styles.taskCardHeader}>
-              <Text style={styles.taskCardBadge}>🎯 AKTYWNE ZADANIE</Text>
+              <Text style={styles.taskCardBadge}>🎯 AKTYWNA MISJA</Text>
               {expiresAtSeconds !== null && (
                 <CountdownRing totalSeconds={activeTask.durationSeconds ?? 0} remainingSeconds={expiresAtSeconds} />
               )}
@@ -261,8 +241,8 @@ export default function HomeScreen({ navigation }: Props) {
         ) : (
           <View style={styles.noTaskCard}>
             <Text style={styles.noTaskEmoji}>😴</Text>
-            <Text style={styles.noTaskText}>Brak aktywnych zadań</Text>
-            <Text style={styles.noTaskSub}>Organizator wkrótce wyśle kolejne...</Text>
+            <Text style={styles.noTaskText}>Brak aktywnej misji</Text>
+            <Text style={styles.noTaskSub}>Organizator wkrótce wyśle kolejną...</Text>
           </View>
         )}
 
@@ -314,24 +294,6 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 },
   greeting: { fontSize: 22, fontWeight: 'bold', color: '#f3e8ff' },
   subGreeting: { fontSize: 13, color: '#a78bfa', marginTop: 4 },
-  scoreBadge: {
-    backgroundColor: '#4c1d95',
-    borderRadius: 10,
-    padding: 10,
-    alignItems: 'center',
-    minWidth: 60,
-  },
-  scoreLabel: { fontSize: 10, color: '#c4b5fd', fontWeight: 'bold' },
-  scoreValue: { fontSize: 20, fontWeight: 'bold', color: '#fbbf24' },
-  scoreCard: {
-    backgroundColor: '#2d1b6b',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 20,
-    alignItems: 'center',
-  },
-  scoreCardLabel: { fontSize: 14, color: '#a78bfa' },
-  scoreCardValue: { fontSize: 36, fontWeight: 'bold', color: '#f3e8ff', marginTop: 4 },
   taskCard: {
     backgroundColor: '#3b0764',
     borderRadius: 16,

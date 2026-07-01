@@ -13,7 +13,6 @@ import OnboardingGroomScreen from '../screens/OnboardingGroomScreen';
 import OnboardingStandardScreen from '../screens/OnboardingStandardScreen';
 import HomeScreen from '../screens/HomeScreen';
 import TaskScreen from '../screens/TaskScreen';
-import LeaderboardScreen from '../screens/LeaderboardScreen';
 import HistoryScreen from '../screens/HistoryScreen';
 
 export type RootStackParamList = {
@@ -26,7 +25,6 @@ export type RootStackParamList = {
 
 export type MainTabParamList = {
   Home: undefined;
-  Leaderboard: undefined;
   History: undefined;
 };
 
@@ -47,11 +45,6 @@ function MainTabs() {
         name="Home"
         component={HomeScreen}
         options={{ tabBarLabel: 'Start', tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>🏠</Text> }}
-      />
-      <Tab.Screen
-        name="Leaderboard"
-        component={LeaderboardScreen}
-        options={{ tabBarLabel: 'Ranking', tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>🏆</Text> }}
       />
       <Tab.Screen
         name="History"
