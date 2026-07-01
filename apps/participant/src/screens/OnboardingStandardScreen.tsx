@@ -15,7 +15,7 @@ const SLIDES = [
     id: '1',
     emoji: '🎉',
     title: 'Witamy!',
-    body: 'Jesteś częścią wieczoru kawalerskiego Konrada, ale to nie Twój kawalerski, więc nie masz takiego ładnego opisu. Powodzenia.',
+    body: 'Jesteś częścią wieczoru kawalerskiego Konrada. Powodzenia!',
   }
 ];
 
