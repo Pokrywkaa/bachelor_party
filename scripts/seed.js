@@ -27,8 +27,8 @@ const EVENT_ID = 'main';
 
 const PARTICIPANTS = [
   { name: 'Kondziu',     isGroom: true,  role: 'participant', score: 0, pushToken: null },
-  { name: 'Damian',   isGroom: false, role: 'admin',       score: 0, pushToken: null, pinHash: 'pin:5678' },
-  { name: 'Kociu',   isGroom: false, role: 'participant',       score: 0, pushToken: null},
+  { name: 'Damian',   isGroom: false, role: 'admin', score: 0, pushToken: null, pinHash: 'pin:5678' },
+  { name: 'Kociu',   isGroom: false, role: 'admin', score: 0, pushToken: null, pinHash: 'pin:5678'},
   { name: 'Sali',    isGroom: false, role: 'participant', score: 0, pushToken: null },
   { name: 'Kamzo',   isGroom: false, role: 'participant', score: 0, pushToken: null },
   { name: 'Mati',   isGroom: false, role: 'participant', score: 0, pushToken: null },
@@ -38,7 +38,7 @@ const PARTICIPANTS = [
 ];
 
 const REWARDS = [
-  { icon: '🍻', title: 'Kolejka piwa', description: 'Fundujesz kolejkę piwa dla całej ekipy!' },
+  { icon: '🍻', title: 'Piwsko', description: 'Biegnij do najbliższego baru po piwo dla całej ekipy.' },
   { icon: '🎯', title: 'Mistrz wyzwań', description: 'Wymyślasz zadanie dla wybranej przez Ciebie osoby.' },
   { icon: '🥂', title: 'Toast mistrza', description: 'Wznosisz toast i wszyscy muszą powtórzyć Twoje słowa.' },
   { icon: '📢', title: 'Ogłoszenie króla', description: 'Wygłoś krótkie „ważne ogłoszenie” dla wszystkich.' },
@@ -79,25 +79,25 @@ const TASKS = [
     rewardId: null,
     punishmentId: null,
   },
+  // {
+  //   title: 'Quiz: Urodziny',
+  //   description: 'Kiedy Sali obchodzi urodziny?',
+  //   type: 'quiz',
+  //   points: 90,
+  //   durationSeconds: 180,
+  //   mediaRequired: false,
+  //   rewardId: null,
+  //   punishmentId: null,
+  //   quizOptions: [
+  //     { id: 'a', text: '4 października', isCorrect: false },
+  //     { id: 'b', text: '13 października', isCorrect: true },
+  //     { id: 'c', text: '6 października', isCorrect: false },
+  //     { id: 'd', text: '21 października', isCorrect: false },
+  //   ],
+  // },
   {
-    title: 'Quiz: Urodziny',
-    description: 'Kiedy Konrad obchodzi urodziny?',
-    type: 'quiz',
-    points: 90,
-    durationSeconds: 180,
-    mediaRequired: false,
-    rewardId: null,
-    punishmentId: null,
-    quizOptions: [
-      { id: 'a', text: '4 października', isCorrect: false },
-      { id: 'b', text: '13 października', isCorrect: true },
-      { id: 'c', text: '6 października', isCorrect: false },
-      { id: 'd', text: '21 października', isCorrect: false },
-    ],
-  },
-  {
-    title: 'Odwaga: mini stand-up',
-    description: 'Opowiedz 30-sekundowy żart lub historię przed grupą.',
+    title: 'Numery',
+    description: 'Zdobądź 3 numery telefonów od nieznajomych (kobiet) i wyślij jako dowód.',
     type: 'dare',
     points: 125,
     durationSeconds: 300,
