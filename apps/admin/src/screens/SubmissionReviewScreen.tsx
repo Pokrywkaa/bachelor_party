@@ -71,7 +71,7 @@ function AudioPlayerInline({ uri }: { uri: string }) {
         style={styles.audioPlayButton}
         onPress={() => player.playing ? player.pause() : player.play()}
       >
-        <Text style={styles.audioPlayButtonText}>{player.playing ? '⏸️ Pause' : '▶️ Play'}</Text>
+        <Text style={styles.audioPlayButtonText}>{player.playing ? '⏸️ Pauza' : '▶️ Odtwórz'}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -94,7 +94,7 @@ export default function SubmissionReviewScreen({ navigation, route }: Props) {
   if (!submission || !task || !participant) {
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={styles.errorText}>Submission not found.</Text>
+        <Text style={styles.errorText}>Zgłoszenie nie znalezione.</Text>
       </SafeAreaView>
     );
   }
@@ -122,7 +122,7 @@ export default function SubmissionReviewScreen({ navigation, route }: Props) {
 
       navigation.goBack();
     } catch (e) {
-      Alert.alert('Error', 'Could not save verdict.');
+      Alert.alert('Błąd', 'Nie można zapisać oceny.');
       console.error(e);
     } finally {
       setSaving(false);
@@ -137,17 +137,17 @@ export default function SubmissionReviewScreen({ navigation, route }: Props) {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Text style={styles.back}>← Back</Text>
+            <Text style={styles.back}>← Wróć</Text>
           </TouchableOpacity>
-          <Text style={styles.title}>Review Submission</Text>
+          <Text style={styles.title}>Oceń zgłoszenie</Text>
         </View>
 
         {/* Participant & task info */}
         <View style={styles.infoCard}>
           <Text style={styles.participantName}>{participant.name}{participant.isGroom ? ' 👑' : ''}</Text>
           <Text style={styles.taskTitle}>{task.title}</Text>
-          {submission.isLate && <Text style={styles.lateBadge}>⏰ Submitted late (–25% points)</Text>}
-          <Text style={styles.submittedAt}>Submitted: {new Date(submission.submittedAt).toLocaleString()}</Text>
+          {submission.isLate && <Text style={styles.lateBadge}>⏰ Wysłano za późno (–25% punktów)</Text>}
+          <Text style={styles.submittedAt}>Wysłano: {new Date(submission.submittedAt).toLocaleString()}</Text>
         </View>
 
         {/* Media preview */}
@@ -164,7 +164,7 @@ export default function SubmissionReviewScreen({ navigation, route }: Props) {
         {/* Text answer */}
         {submission.answer && (
           <View style={styles.answerCard}>
-            <Text style={styles.answerLabel}>Answer:</Text>
+            <Text style={styles.answerLabel}>Odpowiedź:</Text>
             <Text style={styles.answerText}>{submission.answer}</Text>
           </View>
         )}
@@ -172,7 +172,7 @@ export default function SubmissionReviewScreen({ navigation, route }: Props) {
         {/* GPS */}
         {submission.location && (
           <View style={styles.answerCard}>
-            <Text style={styles.answerLabel}>📍 Location checked in</Text>
+            <Text style={styles.answerLabel}>📍 Lokalizacja</Text>
             <Text style={styles.answerText}>
               {submission.location.latitude.toFixed(5)}, {submission.location.longitude.toFixed(5)}
             </Text>
@@ -182,7 +182,7 @@ export default function SubmissionReviewScreen({ navigation, route }: Props) {
         {/* Rating */}
         {!alreadyReviewed && (
           <>
-            <Text style={styles.sectionLabel}>Rating</Text>
+            <Text style={styles.sectionLabel}>Ocena</Text>
             <View style={styles.stars}>
               {STARS.map((s) => (
                 <TouchableOpacity key={s} onPress={() => setRating(s)}>
@@ -191,28 +191,28 @@ export default function SubmissionReviewScreen({ navigation, route }: Props) {
               ))}
             </View>
             <Text style={styles.ratingHint}>
-              {calculatePoints(task.points, rating, submission.isLate)} pts will be awarded on approval
+              {calculatePoints(task.points, rating, submission.isLate)} pkt zostanie przyznane po zatwierdzeniu
             </Text>
 
             {/* Admin note */}
-            <Text style={styles.sectionLabel}>Admin Note (optional)</Text>
+            <Text style={styles.sectionLabel}>Notatka admina (opcjonalnie)</Text>
             <TextInput
               style={styles.noteInput}
               value={adminNote}
               onChangeText={setAdminNote}
-              placeholder="Leave a message for the participant..."
+              placeholder="Zostaw wiadomość dla uczestnika..."
               placeholderTextColor="#475569"
               multiline
             />
 
             {/* Reward / Punishment selector */}
-            <Text style={styles.sectionLabel}>Reward on Approve</Text>
+            <Text style={styles.sectionLabel}>Nagroda za zatwierdzenie</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <TouchableOpacity
                 style={[styles.chip, !selectedRewardId && styles.chipActive]}
                 onPress={() => setSelectedRewardId('')}
               >
-                <Text style={styles.chipText}>None</Text>
+                <Text style={styles.chipText}>Brak</Text>
               </TouchableOpacity>
               {rewards.map((r) => (
                 <TouchableOpacity
@@ -225,13 +225,13 @@ export default function SubmissionReviewScreen({ navigation, route }: Props) {
               ))}
             </ScrollView>
 
-            <Text style={styles.sectionLabel}>Punishment on Reject</Text>
+            <Text style={styles.sectionLabel}>Kara za odrzucenie</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <TouchableOpacity
                 style={[styles.chip, !selectedPunishmentId && styles.chipActive]}
                 onPress={() => setSelectedPunishmentId('')}
               >
-                <Text style={styles.chipText}>None</Text>
+                <Text style={styles.chipText}>Brak</Text>
               </TouchableOpacity>
               {punishments.map((p) => (
                 <TouchableOpacity
@@ -251,14 +251,14 @@ export default function SubmissionReviewScreen({ navigation, route }: Props) {
                 onPress={() => verdict('approved')}
                 disabled={saving}
               >
-                {saving ? <ActivityIndicator color="#fff" /> : <Text style={styles.btnText}>✅ Approve</Text>}
+                {saving ? <ActivityIndicator color="#fff" /> : <Text style={styles.btnText}>✅ Zatwierdź</Text>}
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.rejectBtn, saving && styles.btnDisabled]}
                 onPress={() => verdict('rejected')}
                 disabled={saving}
               >
-                <Text style={styles.btnText}>❌ Reject</Text>
+                <Text style={styles.btnText}>❌ Odrzuć</Text>
               </TouchableOpacity>
             </View>
           </>
@@ -270,10 +270,10 @@ export default function SubmissionReviewScreen({ navigation, route }: Props) {
           ]}>
             <Text style={styles.reviewedText}>
               {submission.verdict === 'approved'
-                ? `✅ Approved — ${submission.pointsAwarded} pts awarded`
-                : '❌ Rejected — no points'}
+                ? `✅ Zatwierdzone — ${submission.pointsAwarded} pkt przyznane`
+                : '❌ Odrzucone — brak punktów'}
             </Text>
-            {submission.rating && <Text style={styles.reviewedRating}>Rating: {'⭐'.repeat(submission.rating)}</Text>}
+            {submission.rating && <Text style={styles.reviewedRating}>Ocena: {'⭐'.repeat(submission.rating)}</Text>}
             {submission.adminNote && <Text style={styles.reviewedNote}>"{submission.adminNote}"</Text>}
           </View>
         )}

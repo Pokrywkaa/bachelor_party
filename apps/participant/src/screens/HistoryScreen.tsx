@@ -77,7 +77,7 @@ export default function HistoryScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.title}>📋 Historia misji</Text>
+        <Text style={styles.title}>📋 Historia zadań</Text>
         <FlatList
           data={sorted}
           keyExtractor={(a) => a.id}
@@ -86,8 +86,8 @@ export default function HistoryScreen() {
           ListEmptyComponent={
             <View style={styles.empty}>
               <Text style={styles.emptyEmoji}>📭</Text>
-              <Text style={styles.emptyText}>Brak misji</Text>
-              <Text style={styles.emptySub}>Historia pojawi sie tutaj po otrzymaniu zadan</Text>
+              <Text style={styles.emptyText}>Brak zadań</Text>
+              <Text style={styles.emptySub}>Historia pojawi się tutaj po otrzymaniu zadań</Text>
             </View>
           }
         />

@@ -120,7 +120,7 @@ export default function TaskScreen({ navigation, route }: Props) {
       <SafeAreaView style={styles.container}>
         <Text style={styles.errorText}>Nie znaleziono zadania.</Text>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backButtonText}>← Wroc</Text>
+          <Text style={styles.backButtonText}>← Wróć</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -134,7 +134,7 @@ export default function TaskScreen({ navigation, route }: Props) {
         <Text style={styles.doneSub}>Czekamy na ocene organizatora...</Text>
         {isLate && <Text style={styles.lateWarning}>⚠️ Wyslano po czasie - obowiazuje kara 25% punktow</Text>}
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
-          <Text style={styles.buttonText}>Wroc do startu</Text>
+          <Text style={styles.buttonText}>Wróć do startu</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -177,7 +177,7 @@ export default function TaskScreen({ navigation, route }: Props) {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Text style={styles.backText}>← Wroc</Text>
+            <Text style={styles.backText}>← Wróć</Text>
           </TouchableOpacity>
           {remainingSeconds !== null && task.durationSeconds && (
             <CountdownRing

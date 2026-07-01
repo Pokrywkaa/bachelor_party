@@ -44,11 +44,11 @@ export function getInitials(name: string): string {
 
 export function taskTypeLabel(type: string): string {
   const labels: Record<string, string> = {
-    photo: '📸 Photo',
-    video: '🎥 Video',
+    photo: '📸 Zdjęcie',
+    video: '🎥 Wideo',
     quiz: '🧠 Quiz',
     audio: '🎙️ Audio',
-    dare: '😈 Dare',
+    dare: '😈 Wyzwanie',
   };
   return labels[type] ?? type;
 }

@@ -17,10 +17,10 @@ export default function TaskLibraryScreen({ navigation }: Props) {
   const { tasks } = useAdminStore();
 
   const handleDelete = (task: Task) => {
-    Alert.alert('Delete Task', `Delete "${task.title}"?`, [
-      { text: 'Cancel', style: 'cancel' },
+    Alert.alert('Usuń zadanie', `Usunąć "${task.title}"?`, [
+      { text: 'Anuluj', style: 'cancel' },
       {
-        text: 'Delete', style: 'destructive',
+        text: 'Usuń', style: 'destructive',
         onPress: async () => {
           await deleteDoc(doc(db, 'events', EVENT_ID, 'tasks', task.id));
         },
@@ -42,16 +42,16 @@ export default function TaskLibraryScreen({ navigation }: Props) {
         {item.durationSeconds && (
           <Text style={styles.tag}>⏱️ {item.durationSeconds}s</Text>
         )}
-        {item.mediaRequired && <Text style={styles.tag}>📎 Media required</Text>}
+        {item.mediaRequired && <Text style={styles.tag}>📎 Wymagane media</Text>}
         <View style={styles.actions}>
           <TouchableOpacity
             style={styles.editBtn}
             onPress={() => navigation.navigate('CreateEditTask', { taskId: item.id })}
           >
-            <Text style={styles.editBtnText}>Edit</Text>
+            <Text style={styles.editBtnText}>Edytuj</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.deleteBtn} onPress={() => handleDelete(item)}>
-            <Text style={styles.deleteBtnText}>Delete</Text>
+            <Text style={styles.deleteBtnText}>Usuń</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -62,12 +62,12 @@ export default function TaskLibraryScreen({ navigation }: Props) {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>🎯 Task Library</Text>
+          <Text style={styles.title}>🎯 Biblioteka zadań</Text>
           <TouchableOpacity
             style={styles.addButton}
             onPress={() => navigation.navigate('CreateEditTask', {})}
           >
-            <Text style={styles.addButtonText}>+ New</Text>
+            <Text style={styles.addButtonText}>+ Nowe</Text>
           </TouchableOpacity>
         </View>
         <FlatList
@@ -78,8 +78,8 @@ export default function TaskLibraryScreen({ navigation }: Props) {
           ListEmptyComponent={
             <View style={styles.empty}>
               <Text style={styles.emptyEmoji}>🎯</Text>
-              <Text style={styles.emptyText}>No tasks yet</Text>
-              <Text style={styles.emptySub}>Tap "+ New" to create your first task</Text>
+              <Text style={styles.emptyText}>Brak zadań</Text>
+              <Text style={styles.emptySub}>Kliknij "+ Nowe", aby stworzyć pierwsze zadanie</Text>
             </View>
           }
         />

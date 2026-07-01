@@ -51,16 +51,16 @@ export default function RewardsPunishmentsScreen() {
       }
       setModalVisible(false);
     } catch {
-      Alert.alert('Error', 'Could not save.');
+      Alert.alert('Błąd', 'Nie można zapisać.');
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = (item: Reward | Punishment) => {
-    Alert.alert('Delete', `Delete "${item.title}"?`, [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Delete', style: 'destructive', onPress: async () => {
+    Alert.alert('Usuń', `Usunąć "${item.title}"?`, [
+      { text: 'Anuluj', style: 'cancel' },
+      { text: 'Usuń', style: 'destructive', onPress: async () => {
         await deleteDoc(doc(db, 'events', EVENT_ID, colName, item.id));
       }},
     ]);
@@ -75,10 +75,10 @@ export default function RewardsPunishmentsScreen() {
       </View>
       <View style={styles.cardActions}>
         <TouchableOpacity style={styles.editBtn} onPress={() => openEdit(item)}>
-          <Text style={styles.editBtnText}>Edit</Text>
+          <Text style={styles.editBtnText}>Edytuj</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.deleteBtn} onPress={() => handleDelete(item)}>
-          <Text style={styles.deleteBtnText}>Del</Text>
+          <Text style={styles.deleteBtnText}>Usuń</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -87,7 +87,7 @@ export default function RewardsPunishmentsScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.title}>🎁 Rewards & Punishments</Text>
+        <Text style={styles.title}>🎁 Nagrody i kary</Text>
 
         {/* Mode toggle */}
         <View style={styles.toggle}>
@@ -95,18 +95,18 @@ export default function RewardsPunishmentsScreen() {
             style={[styles.toggleBtn, mode === 'rewards' && styles.toggleBtnActive]}
             onPress={() => setMode('rewards')}
           >
-            <Text style={[styles.toggleText, mode === 'rewards' && styles.toggleTextActive]}>🏆 Rewards</Text>
+            <Text style={[styles.toggleText, mode === 'rewards' && styles.toggleTextActive]}>🏆 Nagrody</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.toggleBtn, mode === 'punishments' && styles.toggleBtnActive]}
             onPress={() => setMode('punishments')}
           >
-            <Text style={[styles.toggleText, mode === 'punishments' && styles.toggleTextActive]}>💀 Punishments</Text>
+            <Text style={[styles.toggleText, mode === 'punishments' && styles.toggleTextActive]}>💀 Kary</Text>
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity style={styles.addBtn} onPress={openCreate}>
-          <Text style={styles.addBtnText}>+ Add {mode === 'rewards' ? 'Reward' : 'Punishment'}</Text>
+          <Text style={styles.addBtnText}>+ Dodaj {mode === 'rewards' ? 'nagrodę' : 'karę'}</Text>
         </TouchableOpacity>
 
         <FlatList
@@ -114,23 +114,23 @@ export default function RewardsPunishmentsScreen() {
           keyExtractor={(i) => i.id}
           renderItem={renderItem}
           contentContainerStyle={styles.list}
-          ListEmptyComponent={<Text style={styles.empty}>No {mode} yet. Add some!</Text>}
+          ListEmptyComponent={<Text style={styles.empty}>Brak {mode === 'rewards' ? 'nagród' : 'kar'}. Dodaj nowe!</Text>}
         />
       </View>
 
       <Modal visible={modalVisible} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modal}>
-            <Text style={styles.modalTitle}>{editItem ? 'Edit' : 'New'} {mode === 'rewards' ? 'Reward' : 'Punishment'}</Text>
-            <TextInput style={styles.input} value={icon} onChangeText={setIcon} placeholder="Emoji icon" placeholderTextColor="#475569" />
-            <TextInput style={styles.input} value={title} onChangeText={setTitle} placeholder="Title *" placeholderTextColor="#475569" />
-            <TextInput style={[styles.input, styles.textarea]} value={description} onChangeText={setDescription} placeholder="Description..." placeholderTextColor="#475569" multiline />
+            <Text style={styles.modalTitle}>{editItem ? 'Edytuj' : 'Nowa'} {mode === 'rewards' ? 'nagrodę' : 'karę'}</Text>
+            <TextInput style={styles.input} value={icon} onChangeText={setIcon} placeholder="Emoji" placeholderTextColor="#475569" />
+            <TextInput style={styles.input} value={title} onChangeText={setTitle} placeholder="Tytuł *" placeholderTextColor="#475569" />
+            <TextInput style={[styles.input, styles.textarea]} value={description} onChangeText={setDescription} placeholder="Opis..." placeholderTextColor="#475569" multiline />
             <View style={styles.modalBtns}>
               <TouchableOpacity style={styles.modalCancel} onPress={() => setModalVisible(false)}>
-                <Text style={styles.modalCancelText}>Cancel</Text>
+                <Text style={styles.modalCancelText}>Anuluj</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.modalSave} onPress={handleSave} disabled={saving}>
-                {saving ? <ActivityIndicator color="#fff" /> : <Text style={styles.modalSaveText}>Save</Text>}
+                {saving ? <ActivityIndicator color="#fff" /> : <Text style={styles.modalSaveText}>Zapisz</Text>}
               </TouchableOpacity>
             </View>
           </View>

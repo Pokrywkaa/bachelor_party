@@ -50,16 +50,16 @@ export default function SubmissionsScreen({ navigation }: Props) {
                 {item.verdict === 'approved' ? '✅' : '❌'}
               </Text>
             ) : (
-              <Text style={styles.pendingBadge}>⏳ Review</Text>
+              <Text style={styles.pendingBadge}>⏳ Ocena</Text>
             )}
-            {item.isLate && <Text style={styles.lateBadge}>Late</Text>}
+            {item.isLate && <Text style={styles.lateBadge}>Spóźnione</Text>}
           </View>
         </View>
         <Text style={styles.submittedAt}>
           {new Date(item.submittedAt).toLocaleString()}
         </Text>
         {item.mediaUrl && (
-          <Text style={styles.mediaHint}>📎 Has {item.mediaType}</Text>
+          <Text style={styles.mediaHint}>📎 Zawiera {item.mediaType}</Text>
         )}
       </TouchableOpacity>
     );
@@ -68,7 +68,7 @@ export default function SubmissionsScreen({ navigation }: Props) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.title}>📥 Submissions</Text>
+        <Text style={styles.title}>📥 Zgłoszenia</Text>
 
         {/* Filter tabs */}
         <View style={styles.filters}>
@@ -79,7 +79,7 @@ export default function SubmissionsScreen({ navigation }: Props) {
               onPress={() => setFilter(f)}
             >
               <Text style={[styles.filterText, filter === f && styles.filterTextActive]}>
-                {f.charAt(0).toUpperCase() + f.slice(1)}
+                {f === 'all' ? 'Wszystkie' : f === 'pending' ? 'Oczekuje' : f === 'approved' ? 'Zatwierdzone' : 'Odrzucone'}
                 {f === 'pending' && ` (${submissions.filter((s) => !s.verdict).length})`}
               </Text>
             </TouchableOpacity>
@@ -94,7 +94,7 @@ export default function SubmissionsScreen({ navigation }: Props) {
           ListEmptyComponent={
             <View style={styles.empty}>
               <Text style={styles.emptyEmoji}>📭</Text>
-              <Text style={styles.emptyText}>No {filter === 'all' ? '' : filter} submissions</Text>
+              <Text style={styles.emptyText}>Brak {filter === 'all' ? '' : filter === 'pending' ? 'oczekujących ' : filter === 'approved' ? 'zatwierdzonych ' : 'odrzuconych '}zgłoszeń</Text>
             </View>
           }
         />

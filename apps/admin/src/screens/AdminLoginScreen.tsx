@@ -30,7 +30,7 @@ export default function AdminLoginScreen({ navigation }: Props) {
 
   const handleLogin = async () => {
     if (!name.trim() || pin.length !== 4) {
-      Alert.alert('Invalid input', 'Enter your name and a 4-digit PIN.');
+      Alert.alert('Błędne dane', 'Podaj swoje imię i 4-cyfrowy PIN.');
       return;
     }
     setLoading(true);
@@ -46,7 +46,7 @@ export default function AdminLoginScreen({ navigation }: Props) {
       const snap = await getDocs(q);
 
       if (snap.empty) {
-        Alert.alert('Access denied', 'This name is not registered as an admin.');
+        Alert.alert('Brak dostępu', 'To imię nie jest zarejestrowane jako administrator.');
         return;
       }
 
@@ -55,7 +55,7 @@ export default function AdminLoginScreen({ navigation }: Props) {
 
       // Verify PIN
       if (data.pinHash !== hashPin(pin)) {
-        Alert.alert('Wrong PIN', 'Incorrect PIN. Try again.');
+        Alert.alert('Błędny PIN', 'Nieprawidłowy PIN. Spróbuj ponownie.');
         return;
       }
 
@@ -67,7 +67,7 @@ export default function AdminLoginScreen({ navigation }: Props) {
       setCurrentAdmin({ id: adminDoc.id, ...data } as Participant);
       navigation.replace('AdminMain');
     } catch (e) {
-      Alert.alert('Error', 'Login failed. Check your connection.');
+      Alert.alert('Błąd', 'Logowanie nie powiodło się. Sprawdź połączenie.');
       console.error(e);
     } finally {
       setLoading(false);
@@ -81,12 +81,12 @@ export default function AdminLoginScreen({ navigation }: Props) {
     >
       <View style={styles.inner}>
         <Text style={styles.emoji}>⚙️</Text>
-        <Text style={styles.title}>Admin Panel</Text>
-        <Text style={styles.subtitle}>Bachelor Party Control Center</Text>
+        <Text style={styles.title}>Panel Admina</Text>
+        <Text style={styles.subtitle}>Centrum Dowodzenia Armagedonem</Text>
 
         <TextInput
           style={styles.input}
-          placeholder="Your name..."
+          placeholder="Twoje imię..."
           placeholderTextColor="#475569"
           value={name}
           onChangeText={setName}
@@ -94,7 +94,7 @@ export default function AdminLoginScreen({ navigation }: Props) {
         />
         <TextInput
           style={styles.input}
-          placeholder="4-digit PIN"
+          placeholder="4-cyfrowy PIN"
           placeholderTextColor="#475569"
           value={pin}
           onChangeText={(t) => setPin(t.replace(/[^0-9]/g, '').slice(0, 4))}
@@ -108,7 +108,7 @@ export default function AdminLoginScreen({ navigation }: Props) {
           onPress={handleLogin}
           disabled={loading}
         >
-          {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Login →</Text>}
+          {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Zaloguj →</Text>}
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>

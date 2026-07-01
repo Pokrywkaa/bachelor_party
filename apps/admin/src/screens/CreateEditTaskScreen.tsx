@@ -52,7 +52,7 @@ export default function CreateEditTaskScreen({ navigation, route }: Props) {
 
   const handleSave = async () => {
     if (!title.trim() || !description.trim()) {
-      Alert.alert('Missing fields', 'Title and description are required.');
+      Alert.alert('Brakujące pola', 'Tytuł i opis są wymagane.');
       return;
     }
     setSaving(true);
@@ -77,7 +77,7 @@ export default function CreateEditTaskScreen({ navigation, route }: Props) {
       }
       navigation.goBack();
     } catch (e) {
-      Alert.alert('Error', 'Could not save task.');
+      Alert.alert('Błąd', 'Nie można zapisać zadania.');
     } finally {
       setSaving(false);
     }
@@ -88,21 +88,21 @@ export default function CreateEditTaskScreen({ navigation, route }: Props) {
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Text style={styles.back}>✕ Cancel</Text>
+            <Text style={styles.back}>✕ Anuluj</Text>
           </TouchableOpacity>
-          <Text style={styles.title}>{taskId ? 'Edit Task' : 'New Task'}</Text>
+          <Text style={styles.title}>{taskId ? 'Edytuj zadanie' : 'Nowe zadanie'}</Text>
           <TouchableOpacity onPress={handleSave} disabled={saving}>
-            {saving ? <ActivityIndicator color="#38bdf8" /> : <Text style={styles.save}>Save ✓</Text>}
+            {saving ? <ActivityIndicator color="#38bdf8" /> : <Text style={styles.save}>Zapisz ✓</Text>}
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.label}>Title *</Text>
-        <TextInput style={styles.input} value={title} onChangeText={setTitle} placeholder="e.g. Take a selfie with a stranger" placeholderTextColor="#475569" />
+        <Text style={styles.label}>Tytuł *</Text>
+        <TextInput style={styles.input} value={title} onChangeText={setTitle} placeholder="np. Zrób selfie z nieznajomym" placeholderTextColor="#475569" />
 
-        <Text style={styles.label}>Description *</Text>
-        <TextInput style={[styles.input, styles.textarea]} value={description} onChangeText={setDescription} placeholder="Describe the task in detail..." placeholderTextColor="#475569" multiline numberOfLines={4} />
+        <Text style={styles.label}>Opis *</Text>
+        <TextInput style={[styles.input, styles.textarea]} value={description} onChangeText={setDescription} placeholder="Opisz zadanie szczegółowo..." placeholderTextColor="#475569" multiline numberOfLines={4} />
 
-        <Text style={styles.label}>Task Type</Text>
+        <Text style={styles.label}>Typ zadania</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.typeScroll}>
           {TASK_TYPES.map((t) => (
             <TouchableOpacity
@@ -117,14 +117,14 @@ export default function CreateEditTaskScreen({ navigation, route }: Props) {
           ))}
         </ScrollView>
 
-        <Text style={styles.label}>Points</Text>
+        <Text style={styles.label}>Punkty</Text>
         <TextInput style={styles.input} value={points} onChangeText={setPoints} keyboardType="number-pad" placeholder="100" placeholderTextColor="#475569" />
 
-        <Text style={styles.label}>Timer (seconds, leave blank for no timer)</Text>
-        <TextInput style={styles.input} value={duration} onChangeText={setDuration} keyboardType="number-pad" placeholder="e.g. 300 for 5 minutes" placeholderTextColor="#475569" />
+        <Text style={styles.label}>Timer (sekundy, zostaw puste jeśli brak)</Text>
+        <TextInput style={styles.input} value={duration} onChangeText={setDuration} keyboardType="number-pad" placeholder="np. 300 (5 minut)" placeholderTextColor="#475569" />
 
         <View style={styles.switchRow}>
-          <Text style={styles.label}>Media Required</Text>
+          <Text style={styles.label}>Wymagane media</Text>
           <Switch
             value={mediaRequired}
             onValueChange={setMediaRequired}
@@ -133,13 +133,13 @@ export default function CreateEditTaskScreen({ navigation, route }: Props) {
           />
         </View>
 
-        <Text style={styles.label}>Reward (on success)</Text>
+        <Text style={styles.label}>Nagroda (za sukces)</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.typeScroll}>
           <TouchableOpacity
             style={[styles.typeChip, !rewardId && styles.typeChipActive]}
             onPress={() => setRewardId('')}
           >
-            <Text style={[styles.typeChipText, !rewardId && styles.typeChipTextActive]}>None</Text>
+            <Text style={[styles.typeChipText, !rewardId && styles.typeChipTextActive]}>Brak</Text>
           </TouchableOpacity>
           {rewards.map((r) => (
             <TouchableOpacity
@@ -154,13 +154,13 @@ export default function CreateEditTaskScreen({ navigation, route }: Props) {
           ))}
         </ScrollView>
 
-        <Text style={styles.label}>Punishment (on failure)</Text>
+        <Text style={styles.label}>Kara (za niepowodzenie)</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.typeScroll}>
           <TouchableOpacity
             style={[styles.typeChip, !punishmentId && styles.typeChipActive]}
             onPress={() => setPunishmentId('')}
           >
-            <Text style={[styles.typeChipText, !punishmentId && styles.typeChipTextActive]}>None</Text>
+            <Text style={[styles.typeChipText, !punishmentId && styles.typeChipTextActive]}>Brak</Text>
           </TouchableOpacity>
           {punishments.map((p) => (
             <TouchableOpacity

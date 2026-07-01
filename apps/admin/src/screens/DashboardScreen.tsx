@@ -85,9 +85,9 @@ export default function DashboardScreen() {
       setTriggerModalVisible(false);
       setSelectedTask(null);
       setSelectedParticipantIds([]);
-      Alert.alert('Task triggered!', `"${selectedTask.title}" sent to ${selectedParticipantIds.length} participant${selectedParticipantIds.length > 1 ? 's' : ''}.`);
+      Alert.alert('Misja wysłana!', `"${selectedTask.title}" wysłano do ${selectedParticipantIds.length} uczestnik(ów).`);
     } catch (e) {
-      Alert.alert('Error', 'Could not trigger task. Try again.');
+      Alert.alert('Błąd', 'Nie można wysłać misji. Spróbuj ponownie.');
     } finally {
       setTriggering(false);
     }
@@ -104,35 +104,35 @@ export default function DashboardScreen() {
         <View style={styles.statsRow}>
           <View style={styles.statCard}>
             <Text style={styles.statValue}>{totalAssignments}</Text>
-            <Text style={styles.statLabel}>Tasks Triggered</Text>
+            <Text style={styles.statLabel}>Wysłane misje</Text>
           </View>
           <View style={[styles.statCard, pendingSubmissions > 0 && styles.statCardAlert]}>
             <Text style={styles.statValue}>{pendingSubmissions}</Text>
-            <Text style={styles.statLabel}>Pending Review</Text>
+            <Text style={styles.statLabel}>Do przeglądu</Text>
           </View>
           <View style={styles.statCard}>
             <Text style={styles.statValue}>{approvedCount}</Text>
-            <Text style={styles.statLabel}>Approved</Text>
+            <Text style={styles.statLabel}>Zatwierdzone</Text>
           </View>
         </View>
 
         {/* Quick trigger */}
         <TouchableOpacity style={styles.triggerButton} onPress={() => setTriggerModalVisible(true)}>
-          <Text style={styles.triggerButtonText}>🎯 Trigger a Task</Text>
+          <Text style={styles.triggerButtonText}>🎯 Wyślij misję</Text>
         </TouchableOpacity>
 
         {/* Mini leaderboard */}
-        <Text style={styles.sectionTitle}>🏆 Leaderboard</Text>
+        <Text style={styles.sectionTitle}>🏆 Ranking</Text>
         {participants.slice(0, 5).map((p, i) => (
           <View key={p.id} style={styles.leaderRow}>
             <Text style={styles.leaderRank}>#{i + 1}</Text>
             <Text style={styles.leaderName}>{p.name}{p.isGroom ? ' 👑' : ''}</Text>
-            <Text style={styles.leaderScore}>{p.score} pts</Text>
+            <Text style={styles.leaderScore}>{p.score} pkt</Text>
           </View>
         ))}
 
         {/* Recent assignments */}
-        <Text style={styles.sectionTitle}>⚡ Recent Triggers</Text>
+        <Text style={styles.sectionTitle}>⚡ Ostatnie misje</Text>
         {assignments.slice(0, 5).map((a) => {
           const task = tasks.find((t) => t.id === a.taskId);
           const participant = participants.find((p) => p.id === a.participantId);
@@ -157,9 +157,9 @@ export default function DashboardScreen() {
       <Modal visible={triggerModalVisible} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modal}>
-            <Text style={styles.modalTitle}>🎯 Trigger a Task</Text>
+            <Text style={styles.modalTitle}>🎯 Wyślij misję</Text>
 
-            <Text style={styles.modalLabel}>Select Task:</Text>
+            <Text style={styles.modalLabel}>Wybierz misję:</Text>
             <FlatList
               data={tasks}
               keyExtractor={(t) => t.id}
@@ -170,12 +170,12 @@ export default function DashboardScreen() {
                   onPress={() => setSelectedTask(item)}
                 >
                   <Text style={styles.modalItemText}>{item.title}</Text>
-                  <Text style={styles.modalItemSub}>{item.points} pts · {item.type}</Text>
+                  <Text style={styles.modalItemSub}>{item.points} pkt · {item.type}</Text>
                 </TouchableOpacity>
               )}
             />
 
-            <Text style={styles.modalLabel}>Assign to (tap to select multiple):</Text>
+            <Text style={styles.modalLabel}>Przypisz do (kliknij, aby wybrać wiele):</Text>
             <FlatList
               data={nonAdminParticipants}
               keyExtractor={(p) => p.id}
@@ -197,7 +197,7 @@ export default function DashboardScreen() {
 
             <View style={styles.modalButtons}>
               <TouchableOpacity style={styles.modalCancel} onPress={() => setTriggerModalVisible(false)}>
-                <Text style={styles.modalCancelText}>Cancel</Text>
+                <Text style={styles.modalCancelText}>Anuluj</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.modalConfirm, (!selectedTask || selectedParticipantIds.length === 0) && styles.buttonDisabled]}
@@ -206,7 +206,7 @@ export default function DashboardScreen() {
               >
                 {triggering
                   ? <ActivityIndicator color="#fff" />
-                  : <Text style={styles.modalConfirmText}>Send to {selectedParticipantIds.length || '?'} 🚀</Text>}
+                  : <Text style={styles.modalConfirmText}>Wyślij do {selectedParticipantIds.length || '?'} 🚀</Text>}
               </TouchableOpacity>
             </View>
           </View>

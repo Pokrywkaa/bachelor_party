@@ -51,22 +51,22 @@ function AdminTabs() {
       <Tab.Screen
         name="Tasks"
         component={TaskLibraryScreen}
-        options={{ tabBarLabel: 'Tasks', tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 18 }}>🎯</Text> }}
+        options={{ tabBarLabel: 'Zadania', tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 18 }}>🎯</Text> }}
       />
       <Tab.Screen
         name="Submissions"
         component={SubmissionsScreen}
-        options={{ tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 18 }}>📥</Text> }}
+        options={{ tabBarLabel: 'Zgłoszenia', tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 18 }}>📥</Text> }}
       />
       <Tab.Screen
         name="RewardsPunishments"
         component={RewardsPunishmentsScreen}
-        options={{ tabBarLabel: 'Rewards', tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 18 }}>🎁</Text> }}
+        options={{ tabBarLabel: 'Nagrody', tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 18 }}>🎁</Text> }}
       />
       <Tab.Screen
         name="Participants"
         component={ParticipantsScreen}
-        options={{ tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 18 }}>👥</Text> }}
+        options={{ tabBarLabel: 'Uczestnicy', tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 18 }}>👥</Text> }}
       />
     </Tab.Navigator>
   );

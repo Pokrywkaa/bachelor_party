@@ -23,10 +23,10 @@ export default function ParticipantsScreen() {
   const sorted = [...participants].sort((a, b) => b.score - a.score);
 
   const setGroom = async (participant: Participant) => {
-    Alert.alert('Set Groom', `Mark ${participant.name} as the groom?`, [
-      { text: 'Cancel', style: 'cancel' },
+    Alert.alert('Ustaw pana młodego', `Oznaczyć ${participant.name} jako pana młodego?`, [
+      { text: 'Anuluj', style: 'cancel' },
       {
-        text: 'Yes', onPress: async () => {
+        text: 'Tak', onPress: async () => {
           for (const p of participants) {
             if (p.isGroom && p.id !== participant.id) {
               await updateDoc(doc(db, 'events', EVENT_ID, 'participants', p.id), { isGroom: false });
@@ -70,7 +70,7 @@ export default function ParticipantsScreen() {
 
   const handleSetPin = async () => {
     if (newPin.length !== 4 || !/^\d{4}$/.test(newPin)) {
-      Alert.alert('Invalid PIN', 'PIN must be exactly 4 digits.');
+      Alert.alert('Błędny PIN', 'PIN musi mieć dokładnie 4 cyfry.');
       return;
     }
     if (!pinTarget) return;
@@ -79,7 +79,7 @@ export default function ParticipantsScreen() {
       pinHash: hashPin(newPin),
     });
     setPinModalVisible(false);
-    Alert.alert('Done', `Admin PIN set for ${pinTarget.name}.`);
+    Alert.alert('Gotowe', `Ustawiono PIN admina dla ${pinTarget.name}.`);
   };
 
   const renderParticipant = ({ item, index }: { item: Participant; index: number }) => {
@@ -95,18 +95,18 @@ export default function ParticipantsScreen() {
         <View style={styles.cardBody}>
           <View style={styles.nameRow}>
             <Text style={styles.name}>{item.name}</Text>
-            {item.isGroom && <Text style={styles.groomBadge}>👑 Groom</Text>}
+            {item.isGroom && <Text style={styles.groomBadge}>👑 Pan młody</Text>}
             {item.role === 'admin' && <Text style={styles.adminBadge}>🔑 Admin</Text>}
-            {isCurrentAdmin && <Text style={styles.youBadge}>You</Text>}
+            {isCurrentAdmin && <Text style={styles.youBadge}>Ty</Text>}
           </View>
-          <Text style={styles.score}>Score: {item.score} pts</Text>
+          <Text style={styles.score}>Wynik: {item.score} pkt</Text>
         </View>
         <View style={styles.actions}>
           <TouchableOpacity style={styles.actionBtn} onPress={() => viewHistory(item)}>
-            <Text style={styles.actionText}>History</Text>
+            <Text style={styles.actionText}>Historia</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionBtn} onPress={() => openAdjust(item)}>
-            <Text style={styles.actionText}>Score</Text>
+            <Text style={styles.actionText}>Wynik</Text>
           </TouchableOpacity>
           {!item.isGroom && (
             <TouchableOpacity style={[styles.actionBtn, styles.groomBtn]} onPress={() => setGroom(item)}>
@@ -137,14 +137,14 @@ export default function ParticipantsScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.title}>👥 Participants</Text>
-        <Text style={styles.subtitle}>{participants.length} participants registered</Text>
+        <Text style={styles.title}>👥 Uczestnicy</Text>
+        <Text style={styles.subtitle}>{participants.length} uczestników zarejestrowanych</Text>
         <FlatList
           data={sorted}
           keyExtractor={(p) => p.id}
           renderItem={renderParticipant}
           contentContainerStyle={styles.list}
-          ListEmptyComponent={<Text style={styles.empty}>No participants yet.</Text>}
+          ListEmptyComponent={<Text style={styles.empty}>Brak uczestników.</Text>}
         />
       </View>
 
@@ -152,10 +152,10 @@ export default function ParticipantsScreen() {
       <Modal visible={historyVisible} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modal}>
-            <Text style={styles.modalTitle}>📋 {selectedParticipant?.name}'s History</Text>
+            <Text style={styles.modalTitle}>📋 Historia: {selectedParticipant?.name}</Text>
             <ScrollView style={styles.historyScroll}>
               {history.length === 0 ? (
-                <Text style={styles.empty}>No assignments yet.</Text>
+                <Text style={styles.empty}>Brak przypisanych misji.</Text>
               ) : (
                 history.map(a => (
                   <View key={a.id} style={styles.historyCard}>
@@ -168,7 +168,7 @@ export default function ParticipantsScreen() {
               )}
             </ScrollView>
             <TouchableOpacity style={styles.closeBtn} onPress={() => setHistoryVisible(false)}>
-              <Text style={styles.closeBtnText}>Close</Text>
+              <Text style={styles.closeBtnText}>Zamknij</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -178,22 +178,22 @@ export default function ParticipantsScreen() {
       <Modal visible={adjustModalVisible} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modal}>
-            <Text style={styles.modalTitle}>Adjust Score: {adjustTarget?.name}</Text>
-            <Text style={styles.currentScore}>Current score: {adjustTarget?.score ?? 0}</Text>
+            <Text style={styles.modalTitle}>Dostosuj wynik: {adjustTarget?.name}</Text>
+            <Text style={styles.currentScore}>Aktualny wynik: {adjustTarget?.score ?? 0}</Text>
             <TextInput
               style={styles.input}
               value={adjustAmount}
               onChangeText={setAdjustAmount}
-              placeholder="e.g. +10 or -5"
+              placeholder="np. +10 lub -5"
               placeholderTextColor="#475569"
               keyboardType="numbers-and-punctuation"
             />
             <View style={styles.modalBtns}>
               <TouchableOpacity style={styles.modalCancel} onPress={() => setAdjustModalVisible(false)}>
-                <Text style={styles.modalCancelText}>Cancel</Text>
+                <Text style={styles.modalCancelText}>Anuluj</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.modalSave} onPress={handleAdjust}>
-                <Text style={styles.modalSaveText}>Apply</Text>
+                <Text style={styles.modalSaveText}>Zastosuj</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -204,13 +204,13 @@ export default function ParticipantsScreen() {
       <Modal visible={pinModalVisible} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modal}>
-            <Text style={styles.modalTitle}>Set Admin PIN: {pinTarget?.name}</Text>
-            <Text style={styles.pinHint}>This will grant admin access and set a 4-digit PIN.</Text>
+            <Text style={styles.modalTitle}>Ustaw PIN admina: {pinTarget?.name}</Text>
+            <Text style={styles.pinHint}>To nada dostęp admina i ustawi 4-cyfrowy PIN.</Text>
             <TextInput
               style={styles.input}
               value={newPin}
               onChangeText={t => setNewPin(t.replace(/[^0-9]/g, '').slice(0, 4))}
-              placeholder="4-digit PIN"
+              placeholder="4-cyfrowy PIN"
               placeholderTextColor="#475569"
               keyboardType="numeric"
               secureTextEntry
@@ -218,10 +218,10 @@ export default function ParticipantsScreen() {
             />
             <View style={styles.modalBtns}>
               <TouchableOpacity style={styles.modalCancel} onPress={() => setPinModalVisible(false)}>
-                <Text style={styles.modalCancelText}>Cancel</Text>
+                <Text style={styles.modalCancelText}>Anuluj</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.modalSave} onPress={handleSetPin}>
-                <Text style={styles.modalSaveText}>Set PIN</Text>
+                <Text style={styles.modalSaveText}>Ustaw PIN</Text>
               </TouchableOpacity>
             </View>
           </View>
