@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
-  ActivityIndicator, Alert, KeyboardAvoidingView, Platform, Image,
+  ActivityIndicator, KeyboardAvoidingView, Platform, Image,
 } from 'react-native';
 import { collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
 import { signInAnonymously } from 'firebase/auth';
@@ -19,15 +19,17 @@ type Props = {
 export default function NameEntryScreen({ navigation }: Props) {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const { setCurrentParticipant, hasCompletedOnboarding } = useParticipantStore();
 
   const handleJoin = async () => {
     const trimmed = name.trim();
     if (!trimmed) {
-      Alert.alert('Podaj imie', 'Wpisz swoje imie, aby kontynuowac.');
+      setError('Wpisz swoje imię, aby kontynuować.');
       return;
     }
 
+    setError('');
     setLoading(true);
     try {
       // Sign in anonymously to get a Firebase UID
@@ -42,10 +44,7 @@ export default function NameEntryScreen({ navigation }: Props) {
       const snap = await getDocs(q);
 
       if (snap.empty) {
-        Alert.alert(
-          'Nie znaleziono imienia',
-          `"${trimmed}" nie jest na liscie gosci. Sprawdz pisownie lub zapytaj organizatora.`
-        );
+        setError(`Nie znaleziono "${trimmed}" na liście gości. Sprawdź pisownię lub zapytaj admina.`);
         setLoading(false);
         return;
       }
@@ -66,7 +65,7 @@ export default function NameEntryScreen({ navigation }: Props) {
         navigation.replace(participantData.isGroom ? 'OnboardingGroom' : 'OnboardingStandard');
       }
     } catch (error) {
-      Alert.alert('Blad', 'Cos poszlo nie tak. Sprobuj ponownie.');
+      setError('Coś poszło nie tak. Spróbuj ponownie.');
       console.error(error);
     } finally {
       setLoading(false);
@@ -85,15 +84,16 @@ export default function NameEntryScreen({ navigation }: Props) {
         <Text style={styles.subtitle}>Wpisz imię, aby dołączyć do gry</Text>
 
         <TextInput
-          style={styles.input}
+          style={[styles.input, !!error && styles.inputError]}
           placeholder="Twoje imię..."
           placeholderTextColor="#6b7280"
           value={name}
-          onChangeText={setName}
+          onChangeText={(t) => { setName(t); setError(''); }}
           autoCapitalize="words"
           returnKeyType="done"
           onSubmitEditing={handleJoin}
         />
+        {!!error && <Text style={styles.errorText}>{error}</Text>}
 
         <TouchableOpacity
           style={[styles.button, loading && styles.buttonDisabled]}
@@ -146,9 +146,19 @@ const styles = StyleSheet.create({
     padding: 16,
     fontSize: 18,
     color: '#f3e8ff',
-    marginBottom: 20,
+    marginBottom: 8,
     borderWidth: 1,
     borderColor: '#4c1d95',
+  },
+  inputError: {
+    borderColor: '#f87171',
+  },
+  errorText: {
+    color: '#f87171',
+    fontSize: 13,
+    marginBottom: 16,
+    width: '100%',
+    textAlign: 'left',
   },
   button: {
     width: '100%',
