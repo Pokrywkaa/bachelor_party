@@ -93,7 +93,7 @@ export default function DashboardScreen() {
     }
   };
 
-  const nonAdminParticipants = participants.filter((p) => p.role === 'participant');
+  const nonAdminParticipants = participants;
 
   return (
     <SafeAreaView style={styles.safeArea}>
